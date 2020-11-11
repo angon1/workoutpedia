@@ -5,29 +5,37 @@
     <body>
         <header>
             <div class= logo>
+                <h1>Hi, {{ current_user.username }}!</h1>
                 <a href="" >Logo</a>
             </div>
+        <div>
             <nav>
                 <ul>
                     <li><a href="{{ url_for('main') }}" class="top-menu"><span > Baza ćwiczeń </span></a></li>
+                    {% if current_user.is_anonymous %}
                     <li><a href="{{ url_for('login') }}" class="top-menu"><span > Login </span></a></li>
-                    <li>
-                    </li>
+                    {% else %}
+                    <li><a href="{{ url_for('logout') }}" class="top-menu"><span > Logout </span></a></li>
+                    {% endif %}
                 </ul>
             </nav>
+        </div>
         </header>
 
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+
 
         <div class="container">
+            <hr>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
             {% block content %}{% endblock %}
         </div>
             <footer>
