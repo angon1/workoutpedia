@@ -7,4 +7,4 @@ class Excercise(db.Model):
     movieLink = db.Column(db.String(512))
 
     def __repr__(self):
-        return '<Excercise name: {}\n Description: {}\n Link: {}>'.format(self.name, self.description, self.movieLink)
+        return '<\nExcercise name: {}\n Description: {}\n Link: {}\n>'.format(self.name, self.description, self.movieLink)

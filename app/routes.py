@@ -1,9 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
-# from werkzeug.urls import url_parse
 from app import app
-# from .users.forms import LoginForm, RegistrationForm
 from flask_login import logout_user
-# from app.users.models import *
 from app.users.loginRoutines import *
 
 @app.route('/')
