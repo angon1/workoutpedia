@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>WorkoutPedia</title>
+    </head>
+    <body>
+        <header>
+            <div class= logo>
+                <a href="" >Logo</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('main') }}" class="top-menu"><span > Baza ćwiczeń </span></a></li>
+                    <li><a href="{{ url_for('login') }}" class="top-menu"><span > Login </span></a></li>
+                    <li>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+            <footer>
+                <a href="https://mistrzowie.org/uimages/services/mistrzowie/i18n/pl_PL/201912/1575833743_by_Nepen.jpg?1575833743" class="top-menu"><span > Stopka </span></a><br>
+            </footer>
+    </body>
+</html>

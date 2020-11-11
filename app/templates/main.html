@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<br>
+<br>
+Welcome to the WorkoutPedia<br>
+<br>
+I hope you will enjoy the time here!
+<br>
+Let's get workout started
+<br>
+
+<div class="linksList">
+    <div class="link">
+        <a href="">Excercises </a>
+        {% for excercise in excercises %}
+        <div><p>
+            Excercise name: {{ excercise.excercise.name }}
+            <br>
+            </p>
+            <p>Description: {{ excercise.description }}</p>
+            <a href="{{ excercise.link }}">link:</a>
+        </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
