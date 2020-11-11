@@ -1,0 +1,10 @@
+from app import db
+
+class Excercise(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=True)
+    description = db.Column(db.String(512), unique=True)
+    movieLink = db.Column(db.String(512))
+
+    def __repr__(self):
+        return '<Excercise name: {}\n Description: {}\n Link: {}>'.format(self.name, self.description, self.movieLink)
