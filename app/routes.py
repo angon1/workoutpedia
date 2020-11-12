@@ -2,25 +2,14 @@ from flask import render_template, flash, redirect, url_for, request
 from app import app
 from flask_login import logout_user
 from app.users.loginRoutines import *
+from app.excercises.excerciseDataHandler import excerciseNewImpl
 
 @app.route('/')
 
 
 @app.route('/main')
 def main():
-    excercises = [
-        {
-            'excercise': {'name': 'Push Up'},
-            'description': 'Simple push up',
-            'link': 'example_link'
-        },
-        {
-            'excercise': {'name': 'Pull Up'},
-            'description': 'Simple pull up',
-            'link': 'example_link 2'
-        }
-    ]
-    return render_template('main.html', title='WorkoutPedia', excercises=excercises)
+    return render_template('main.html', title='WorkoutPedia')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -37,3 +26,7 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return registerWorker()
+
+@app.route('/excercise/new', methods=['GET', 'POST'])
+def excerciseNew():
+    return excerciseNewImpl()

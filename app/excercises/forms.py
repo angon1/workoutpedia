@@ -9,4 +9,4 @@ class ExcerciseForm(FlaskForm):
     name = StringField('Excercise name', validators=[DataRequired()])
     description = StringField('Excercise Description', validators=[DataRequired()])
     movieLink = StringField('Link to YouTube')
-    submit = SubmitField('Zapisz')
+    submit = SubmitField('Save')
