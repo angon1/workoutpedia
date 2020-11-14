@@ -1,8 +1,9 @@
 from app import app
 from app.excercises.models import *
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
+from json import dumps
 
 
 def excerciseAddToBase(form):
@@ -46,23 +47,6 @@ def excerciseEditImpl(id):
         return excerciseEditOnGet(id,form)
 
 
-
-
-
-    # form = ExcerciseForm()
-    # if form.validate_on_submit():
-    #     current_user.username = form.username.data
-    #     current_user.about_me = form.about_me.data
-    #     db.session.commit()
-    #     flash('Your changes have been saved.')
-    #     return redirect(url_for('edit_profile'))
-    # elif request.method == 'GET':
-    #     form.name.data = current_user.username
-    #     form.about_me.data = current_user.about_me
-    # return render_template('edit_profile.html', title='Edit Profile',
-    #                        form=form)
-
-
 def excerciseGetAllFromBase():
     return Excercise.query.all()
 
@@ -87,3 +71,17 @@ def excerciseDeleteFromBase(id):
 def excerciseDeleteImpl(id):
     excerciseDeleteFromBase(id)
     return redirect(url_for('excerciseList'))
+
+
+# Serializers
+def serializeExcerciseList():
+    excerciseList = Excercise.query.all()
+    serializedExcerciseList = []
+    for i in excerciseList:
+        serializedExcerciseList.append(i.to_dict())
+    return dumps(serializedExcerciseList)
+
+
+def excerciseListSerializedImpl():
+    serializedData = serializeExcerciseList()
+    return render_template("excercises/serialized.html", title='WorkoutPedia', serializedData=serializedData)
