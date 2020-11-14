@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block content %}
+        {% for excercise in excerciseList %}
+        <div>
+            <p>
+                Excercise name: <a href="{{ url_for('excerciseShowName', name=excercise.name) }}" >{{ excercise.name }}</a><br>
+                <span> <a href="{{ url_for('excerciseEdit', id=excercise.id) }}">Edit</a></span>&#9
+                <span> <a href="{{ url_for('excerciseDelete', id=excercise.id) }}" >Delete</a></span>
+            </p>
+        </div>
+        {% endfor %}
+        <br>
+        <a href="{{ url_for('excerciseNew') }}" >Add excercise</a><br>
+{% endblock %}
