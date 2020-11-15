@@ -78,10 +78,35 @@ def serializeExcerciseList():
     excerciseList = Excercise.query.all()
     serializedExcerciseList = []
     for i in excerciseList:
+        serializedExcerciseList.append(i.to_dict(only=('id', 'name')))
+    return jsonify(serializedExcerciseList)
+
+def serializeFullExcerciseList():
+    excerciseList = Excercise.query.all()
+    serializedExcerciseList = []
+    for i in excerciseList:
         serializedExcerciseList.append(i.to_dict())
-    return dumps(serializedExcerciseList)
+    return jsonify(serializedExcerciseList)
 
 
 def excerciseListSerializedImpl():
-    serializedData = serializeExcerciseList()
-    return render_template("excercises/serialized.html", title='WorkoutPedia', serializedData=serializedData)
+    return serializeExcerciseList()
+
+def excerciseListSerializedFullImpl():
+    return serializeFullExcerciseList()
+
+def serializeExcercise(name):
+    excercise = Excercise.query.filter_by(name=name).one()
+    excerciseJson = excercise.to_dict()
+    return jsonify(excerciseJson)
+
+def excerciseShowNameSerializedImpl(name):
+    return serializeExcercise(name)
+
+def serializeExcerciseId(id):
+    excercise = Excercise.query.get(id)
+    excerciseJson = excercise.to_dict()
+    return jsonify(excerciseJson)
+
+def excerciseIdSerializeImpl(id):
+    return serializeExcerciseId(id)
