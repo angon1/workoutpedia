@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from app import app
 from flask_login import logout_user
 from app.users.loginRoutines import *
-from app.excercises.excerciseDataHandler import excerciseNewImpl, excerciseListImpl, excerciseShowNameImpl, excerciseDeleteImpl, excerciseEditImpl, excerciseListSerializedImpl, excerciseShowNameSerializedImpl, excerciseIdSerializeImpl
+from app.excercises.excerciseDataHandler import excerciseNewImpl, excerciseListImpl, excerciseShowNameImpl, excerciseDeleteImpl, excerciseEditImpl, excerciseListSerializedImpl, excerciseShowNameSerializedImpl, excerciseIdSerializeImpl, excerciseCreateSerializedImpl
 
 @app.route('/')
 
@@ -52,10 +52,14 @@ def excerciseEdit(id):
 def excerciseListSerialized():
     return excerciseListSerializedImpl()
 
-@app.route('/excercise/<name>/serialized', methods=['GET', 'POST'])
+@app.route('/excercise/<name>/serialized', methods=['GET'])
 def excerciseShowNameSerialized(name):
     return excerciseShowNameSerializedImpl(name)
 
-@app.route('/excercise/<int:id>/serialized', methods=['GET', 'POST'])
+@app.route('/excercise/<int:id>/serialized', methods=['GET'])
 def excerciseIdSerialize(id):
     return excerciseIdSerializeImpl(id)
+
+@app.route('/excercise/create', methods=['POST'])
+def excerciseCreateSerialized():
+    return excerciseCreateSerializedImpl()

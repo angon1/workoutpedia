@@ -1,6 +1,6 @@
 from app import app
 from app.excercises.models import *
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request, jsonify, make_response
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
 from json import dumps
@@ -110,3 +110,45 @@ def serializeExcerciseId(id):
 
 def excerciseIdSerializeImpl(id):
     return serializeExcerciseId(id)
+
+
+def excerciseAddToBaseDict(req):
+    excercise = Excercise.query.filter_by(name=req['name']).first()
+    res = {"":""}
+    if excercise is None:
+        excercise = Excercise(name=req['name'], description=req['description'], movieLink=req['movieLink'])
+        db.session.add(excercise)
+        res = {"message": "Succesfuly added to base"}
+    else:
+        excercise.name = req['name']
+        excercise.description = req['description']
+        excercise.movieLink = req['movieLink']
+        res = {"message": "Succesfuly updated excercise in base"}
+    db.session.commit()
+    return res
+
+def validateIncomingExcerciseDict(req):
+    if  'name' and 'description' and 'movieLink' in req:
+        return True
+    else:
+        return False
+
+
+def handleIncomingJson():
+    res = {"":""}
+    if request.is_json:
+        req = request.get_json()
+        if validateIncomingExcerciseDict(req):
+            res = excerciseAddToBaseDict(req)
+        else:
+            res = {"message": "Invalid excercise format"}
+    else:
+        res = {"message": "Request body must be JSON"}
+    return res
+
+
+
+
+def excerciseCreateSerializedImpl():
+    res = handleIncomingJson()
+    return make_response(jsonify(res), 200)
