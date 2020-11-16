@@ -1,1 +1,1 @@
-web: gunicorn app:workoutpedia
+web: gunicorn app:app
