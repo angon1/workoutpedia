@@ -1,7 +1,7 @@
 """users
 
 Revision ID: e714447e5a23
-Revises: 
+Revises:
 Create Date: 2020-11-11 14:57:16.693740
 
 """

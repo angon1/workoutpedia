@@ -146,9 +146,13 @@ def handleIncomingJson():
         res = {"message": "Request body must be JSON"}
     return res
 
-
-
-
 def excerciseCreateSerializedImpl():
     res = handleIncomingJson()
     return make_response(jsonify(res), 200)
+
+
+#Excercise categorization
+def addDisciplineToExcerciseByName(disciplineName, excerciseName):
+    excercise = Excercise.query.filter_by(name=excerciseName).first()
+    excercise.discipline.append(Discipline.query.filter_by(name=disciplineName).first())
+    return True
