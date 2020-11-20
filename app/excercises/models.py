@@ -18,7 +18,31 @@ class Excercise(db.Model, SerializerMixin):
     tags = db.relationship('Tag', secondary=excerciseToTag, lazy=True, back_populates="excercise")
 #methods
     def __repr__(self):
-        return '<\nExcercise name: {}\n Description: {}\n Link: {}\n>'.format(self.name, self.description, self.movieLink)
+        return '<\nExcercise name: {}\n Description: {}\n Link: {}\n Tags: {}>'.format(self.name, self.description, self.movieLink, self.tagsDict())
+
+    def addTag(self, tag):
+        self.tags.append(tag)
+        db.session.commit()
+        return True
+
+    def removeTag(self,tag):
+        if tag in self.tags:
+            self.tags.remove(tag)
+            db.session.commit()
+            return True
+        else:
+            return False
+
+    def tagsDict(self):
+        tagDict = []
+        for t in self.tags:
+            tagDict.append(t.asDict())
+        return tagDict
+
+    def asDict(self):
+        excerciseDict = self.to_dict(rules=('-tags',))
+        excerciseDict.update({'tags':self.tagsDict()})
+        return excerciseDict
 
 
 class Tag(db.Model, SerializerMixin):
@@ -31,3 +55,6 @@ class Tag(db.Model, SerializerMixin):
 #methods
     def __repr__(self):
         return '<\nTag name: {}\n Category: {}\n>'.format(self.name, self.category)
+
+    def asDict(self):
+        return {'id':self.id, 'name': self.name, 'category':self.category}
