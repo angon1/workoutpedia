@@ -10,3 +10,10 @@ class ExcerciseForm(FlaskForm):
     description = StringField('Excercise Description', validators=[DataRequired()])
     movieLink = StringField('Link to YouTube')
     submit = SubmitField('Save')
+
+
+class TagForm(FlaskForm):
+    name = StringField('Excercise name', validators=[DataRequired()])
+    category = StringField('Excercise Description', validators=[DataRequired()])
+    movieLink = StringField('Link to YouTube')
+    submit = SubmitField('Save')

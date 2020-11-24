@@ -58,3 +58,8 @@ class Tag(db.Model, SerializerMixin):
 
     def asDict(self):
         return {'id':self.id, 'name': self.name, 'category':self.category}
+
+    def addExcercise(self,excercise):
+        self.excercise.append(excercise)
+        db.session.commit()
+        return True
