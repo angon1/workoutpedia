@@ -40,8 +40,7 @@ class Excercise(db.Model, SerializerMixin):
         return tagDict
 
     def asDict(self):
-        excerciseDict = self.to_dict(rules=('-tags',))
-        excerciseDict.update({'tags':self.tagsDict()})
+        excerciseDict = self.to_dict(rules=('-tags.excercise',))
         return excerciseDict
 
 
@@ -54,7 +53,7 @@ class Tag(db.Model, SerializerMixin):
     excercise = db.relationship('Excercise', secondary=excerciseToTag, lazy=True, back_populates="tags")
 #methods
     def __repr__(self):
-        return '<\nTag name: {}\n Category: {}\n>'.format(self.name, self.category)
+        return '{}'.format(self.asDict())
 
     def asDict(self):
         return {'id':self.id, 'name': self.name, 'category':self.category}
