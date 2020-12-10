@@ -97,7 +97,7 @@ def excerciseListSerializedFullImpl():
 
 def serializeExcercise(name):
     excercise = Excercise.query.filter_by(name=name).one()
-    excerciseJson = excercise.to_dict()
+    excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
 
 def excerciseShowNameSerializedImpl(name):
@@ -105,7 +105,7 @@ def excerciseShowNameSerializedImpl(name):
 
 def serializeExcerciseId(id):
     excercise = Excercise.query.get(id)
-    excerciseJson = excercise.to_dict()
+    excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
 
 def excerciseIdSerializeImpl(id):
