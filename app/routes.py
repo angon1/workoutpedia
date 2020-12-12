@@ -1,5 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request
-from app import app
+from flask import render_template, flash, redirect, url_for, request, current_app
+# from app import app
 from flask_login import logout_user
 from app.users.loginRoutines import *
 from app.users.userHandling import *

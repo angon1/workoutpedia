@@ -1,6 +1,7 @@
+from flask import current_app
 from flask.testing import FlaskClient
 from flask import url_for
-from app import app
+
 
 # def test_excercise_getById(app):
 #     """

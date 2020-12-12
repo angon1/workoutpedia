@@ -1,5 +1,6 @@
 # from app import app
 # import unittest
+from flask import current_app
 from app.excercises.models import Excercise, Tag
 
 

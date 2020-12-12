@@ -5,11 +5,23 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 
 
-app = Flask(__name__)
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login = LoginManager(app)
+db = SQLAlchemy()
+migrate = Migrate()
+login = LoginManager()
 login.login_view = 'login'
 
-from app import routes, models
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+
+    #inits
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login.init_app(app)
+
+    if not app.debug and not app.testing:
+        # hihi
+        print("nothing")
+
+    return app
