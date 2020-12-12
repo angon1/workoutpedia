@@ -1,3 +1,4 @@
+from flask import current_app
 from app import db
 from sqlalchemy_serializer import SerializerMixin
 
