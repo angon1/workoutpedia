@@ -4,6 +4,7 @@ from flask import current_app
 from app.excercises.models import Excercise, Tag
 
 
+
 #excercise tests
 class TestExcercise:
     def test_new_excercise(self, new_excercise, test_excercise):
@@ -16,42 +17,42 @@ class TestExcercise:
         assert new_excercise.description == test_excercise['description']
         assert new_excercise.movieLink == test_excercise['movieLink']
 
-    def test_addTag(self, new_excercise, new_tags):
-        """
-        GIVEN a Excercise model object
-        WHEN call Excercise.addTag with correct values
-        THEN check if 'True' is returned
-        """
-        assert new_excercise.addTag(new_tags[0]) == True
+    # def test_addTag(self, new_excercise, new_tags):
+    #     """
+    #     GIVEN a Excercise model object
+    #     WHEN call Excercise.addTag with correct values
+    #     THEN check if 'True' is returned
+    #     """
+    #     assert new_excercise.addTag(new_tags[0]) == True
 
-    def test_removeTagTrue(self, new_excercise, new_tags):
-        """
-        GIVEN a Excercise model object
-        WHEN call Excercise.removeTag with correct values
-        THEN check if 'True' is returned
-        """
-        new_excercise.addTag(new_tags[0])
-        assert new_excercise.removeTag(new_tags[0]) == True
+    # def test_removeTagTrue(self, new_excercise, new_tags):
+    #     """
+    #     GIVEN a Excercise model object
+    #     WHEN call Excercise.removeTag with correct values
+    #     THEN check if 'True' is returned
+    #     """
+    #     new_excercise.addTag(new_tags[0])
+    #     assert new_excercise.removeTag(new_tags[0]) == True
 
-    def test_removeTagFalse(self, new_excercise, new_tags):
-        """
-        GIVEN a Excercise model object
-        WHEN call Excercise.removeTag with wrong values (Tag not in Excercise)
-        THEN check if 'False' is returned
-        """
-        assert new_excercise.removeTag(new_tags[0]) == False
+    # def test_removeTagFalse(self, new_excercise, new_tags):
+    #     """
+    #     GIVEN a Excercise model object
+    #     WHEN call Excercise.removeTag with wrong values (Tag not in Excercise)
+    #     THEN check if 'False' is returned
+    #     """
+    #     assert new_excercise.removeTag(new_tags[0]) == False
 
-    def test_tagsDict(self, new_excercise, new_tags):
-        """
-        GIVEN a Excercise model object
-        WHEN call Excercise.removeTag with wrong values (Tag not in Excercise)
-        THEN check if 'False' is returned
-        """
-        new_excercise.addTag(new_tags[0])
-        new_excercise.addTag(new_tags[1])
+    # def test_tagsDict(self, new_excercise, new_tags):
+    #     """
+    #     GIVEN a Excercise model object
+    #     WHEN call Excercise.removeTag with wrong values (Tag not in Excercise)
+    #     THEN check if 'False' is returned
+    #     """
+    #     new_excercise.addTag(new_tags[0])
+    #     new_excercise.addTag(new_tags[1])
 
-        assert (new_tags[0].asDict() == new_excercise.tagsDict()[0])
-        assert (new_tags[1].asDict() == new_excercise.tagsDict()[1])
+    #     assert (new_tags[0].asDict() == new_excercise.tagsDict()[0])
+    #     assert (new_tags[1].asDict() == new_excercise.tagsDict()[1])
 
 #tag tests
 def test_new_tags(new_tags, test_tags):

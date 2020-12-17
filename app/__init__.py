@@ -35,5 +35,7 @@ def create_app(config_class=Config):
     if not app.debug and not app.testing:
         # hihi
         print("nothing")
+    if app.testing:
+        print("testujemy to gowno")
 
     return app
