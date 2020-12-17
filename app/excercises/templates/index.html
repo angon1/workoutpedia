@@ -4,15 +4,15 @@
         {% for excercise in excerciseList %}
         <div>
             <p>
-                Excercise name: <a href="{{ url_for('excerciseShowName', name=excercise.name) }}" >{{ excercise.name }}</a><br>
-                <span> <a href="{{ url_for('excerciseEdit', id=excercise.id) }}">Edit</a></span>&#9
-                <span> <a href="{{ url_for('excerciseDelete', id=excercise.id) }}" >Delete</a></span>
-                <span> <a href="{{ url_for('excerciseShowNameSerialized', name=excercise.name) }}" >Serialize</a></span>
-                <span> <a href="{{ url_for('excerciseIdSerialize', id=excercise.id) }}" >Serialize by id</a></span>
+                Excercise name: <a href="{{ url_for('excercises.excerciseShowName', name=excercise.name) }}" >{{ excercise.name }}</a><br>
+                <span> <a href="{{ url_for('excercises.excerciseEdit', id=excercise.id) }}">Edit</a></span>&#9
+                <span> <a href="{{ url_for('excercises.excerciseDelete', id=excercise.id) }}" >Delete</a></span>
+                <span> <a href="{{ url_for('excercises.excerciseShowNameSerialized', name=excercise.name) }}" >Serialize</a></span>
+                <span> <a href="{{ url_for('excercises.excerciseIdSerialize', id=excercise.id) }}" >Serialize by id</a></span>
             </p>
         </div>
         {% endfor %}
         <br>
-        <a href="{{ url_for('excerciseNew') }}" >Add excercise</a><br>
-        <a href="{{ url_for('excerciseListSerialized') }}" >Serialize list</a><br>
+        <a href="{{ url_for('excercises.excerciseNew') }}" >Add excercise</a><br>
+        <a href="{{ url_for('excercises.excerciseListSerialized') }}" >Serialize list</a><br>
 {% endblock %}

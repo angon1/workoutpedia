@@ -26,10 +26,10 @@ def create_app(config_class=Config):
     app.register_blueprint(excercises_bp, url_prefix='/excercises')
 
     from app.users import bp as users_bp
-    app.register_blueprint(users_bp)
+    app.register_blueprint(users_bp, template_folder='templates')
 
     from app.main import bp as main_bp
-    app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp, template_folder='templates')
 
     #debugging
     if not app.debug and not app.testing:

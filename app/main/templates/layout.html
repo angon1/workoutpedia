@@ -11,11 +11,11 @@
         <div>
             <nav>
                 <ul>
-                    <li><a href="{{ url_for('excerciseList') }}" class="top-menu"><span > Baza ćwiczeń </span></a></li>
+                    <li><a href="{{ url_for('excercises.excerciseList') }}" class="top-menu"><span > Baza ćwiczeń </span></a></li>
                     {% if current_user.is_anonymous %}
-                    <li><a href="{{ url_for('login') }}" class="top-menu"><span > Login </span></a></li>
+                    <li><a href="{{ url_for('users.login') }}" class="top-menu"><span > Login </span></a></li>
                     {% else %}
-                    <li><a href="{{ url_for('logout') }}" class="top-menu"><span > Logout </span></a></li>
+                    <li><a href="{{ url_for('users.logout') }}" class="top-menu"><span > Logout </span></a></li>
                     {% endif %}
                 </ul>
             </nav>

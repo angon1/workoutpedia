@@ -18,7 +18,7 @@ def excerciseNewImpl():
         excerciseAddToBase(form)
         return redirect(url_for('main'))
     flash('Somehow Excercise can\'t be added')
-    return render_template("excercises/edit.html", title='WorkoutPedia', form=form)
+    return render_template("edit.html", title='WorkoutPedia', form=form)
 
 def excerciseEditOnSubmit(id,form):
     excercise = Excercise.query.get(id)
@@ -28,7 +28,7 @@ def excerciseEditOnSubmit(id,form):
     db.session.commit()
     excercise = Excercise.query.get(id)
     flash("Excercise changes saved")
-    return render_template("excercises/show.html", title='WorkoutPedia', excercise=excercise)
+    return render_template("show.html", title='WorkoutPedia', excercise=excercise)
 
 
 def excerciseEditOnGet(id,form):
@@ -36,7 +36,7 @@ def excerciseEditOnGet(id,form):
     form.name.data = excercise.name
     form.description.data = excercise.description
     form.movieLink.data = excercise.movieLink
-    return render_template("excercises/edit.html", title='WorkoutPedia', id=id, form=form)
+    return render_template("edit.html", title='WorkoutPedia', id=id, form=form)
 
 
 def excerciseEditImpl(id):
@@ -52,7 +52,7 @@ def excerciseGetAllFromBase():
 
 def excerciseListImpl():
     excerciseList = excerciseGetAllFromBase()
-    return render_template("excercises/index.html", title='WorkoutPedia', excerciseList=excerciseList)
+    return render_template("index.html", title='WorkoutPedia', excerciseList=excerciseList)
 
 
 def excerciseGetFromBase(name):
@@ -60,7 +60,7 @@ def excerciseGetFromBase(name):
 
 def excerciseShowNameImpl(name):
     excercise = excerciseGetFromBase(name)
-    return render_template("excercises/show.html", title='WorkoutPedia', excercise=excercise)
+    return render_template("show.html", title='WorkoutPedia', excercise=excercise)
 
 def excerciseDeleteFromBase(id):
     excercise = Excercise.query.get(id)
