@@ -12,33 +12,23 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def app():
 
     """Create and configure a new app instance for each test."""
     # create a temporary file to isolate the database for each test
-    # db_fd, db_path = tempfile.mkstemp()
-    # create the app with common test config
+
     app = create_app(TestConfig)
-    # create the database and load test data
-    # with app.app_context():
     app_context = app.app_context()
     app_context.push()
     db.create_all()
-        # db.create_all()
-            # db.create_all()
-    #     init_db()
-    #     get_db().executescript(_data_sql)
 
     yield app
     db.session.remove()
     db.drop_all()
-    # close and remove the temporary database
-    # os.close(db_fd)
-    # os.unlink(db_path)
+    app_context.pop()
 
-
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def client(app):
     """A test client for the app."""
     return app.test_client()
@@ -95,12 +85,16 @@ def new_excercise(app, test_excercise):
 
 
 @pytest.fixture(scope='function')
-def new_tags(test_tags):
+def new_tags(app, test_tags):
     tags = [
         Tag(name=test_tags[0]['name'],category=test_tags[0]['category']),
         Tag(name=test_tags[1]['name'],category=test_tags[1]['category'])
         ]
-    return tags
+    # for tag in tags:
+    db.session.add(tags[0])
+    db.session.add(tags[1])
+    db.session.commit()
+    yield tags
 
 
 

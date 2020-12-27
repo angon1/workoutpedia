@@ -9,6 +9,7 @@ excerciseToTag = db.Table('excercisetotag',
 )
 
 
+
 class Excercise(db.Model, SerializerMixin):
 #fields
     id = db.Column(db.Integer, primary_key=True)
