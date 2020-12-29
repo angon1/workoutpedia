@@ -26,7 +26,6 @@ class TestSerializers:
         THEN check if excercise is added to db
         """
         excerciseJson = json.dumps(test_excercise)
-        # data = json.loads(client.get("excercises/unittest1/serialized").get_data())
         print(excerciseJson)
         response = client.post(
             'excercises/create',
