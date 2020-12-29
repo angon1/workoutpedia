@@ -74,58 +74,65 @@ def excerciseDeleteImpl(id):
 
 
 # Serializers
-def serializeExcerciseList():
+#excercises:
+def excerciseListSerializedImpl():
     excerciseList = Excercise.query.all()
     serializedExcerciseList = []
     for i in excerciseList:
         serializedExcerciseList.append(i.to_dict(only=('id', 'name')))
     return jsonify(serializedExcerciseList)
 
-def serializeFullExcerciseList():
+def excerciseListSerializedFullImpl():
     excerciseList = Excercise.query.all()
     serializedExcerciseList = []
-    for i in excerciseList:
-        serializedExcerciseList.append(i.to_dict())
+    for excercise in excerciseList:
+        serializedExcerciseList.append(excercise.asDict())
     return jsonify(serializedExcerciseList)
 
-
-def excerciseListSerializedImpl():
-    return serializeExcerciseList()
-
-def excerciseListSerializedFullImpl():
-    return serializeFullExcerciseList()
-
-def serializeExcercise(name):
+def excerciseShowNameSerializedImpl(name):
     excercise = Excercise.query.filter_by(name=name).one()
     excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
 
-def excerciseShowNameSerializedImpl(name):
-    return serializeExcercise(name)
-
-def serializeExcerciseId(id):
+def excerciseIdSerializeImpl(id):
     excercise = Excercise.query.get(id)
     excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
 
-def excerciseIdSerializeImpl(id):
-    return serializeExcerciseId(id)
+def excerciseIdGetTagsImpl(id):
+    excercise = Excercise.query.get(id)
+    return jsonify(excercise.tagsDict())
 
-
+#Handle remote excercises routines
 def excerciseAddToBaseDict(req):
     excercise = Excercise.query.filter_by(name=req['name']).first()
-    res = {"":""}
+    result = [{"":""}, 200]
     if excercise is None:
         excercise = Excercise(name=req['name'], description=req['description'], movieLink=req['movieLink'])
         db.session.add(excercise)
-        res = {"message": "Succesfuly added to base"}
+        result[0] = {"message": "Succesfuly added to base"}
+        result[1] = 201
     else:
         excercise.name = req['name']
         excercise.description = req['description']
         excercise.movieLink = req['movieLink']
-        res = {"message": "Succesfuly updated excercise in base"}
+        result[0]  = {"message": "Succesfuly updated excercise in base"}
+        result[1] = 201
     db.session.commit()
-    return res
+    return result
+
+def excerciseRemoveFromBaseDict(req):
+    excercise = Excercise.query.filter_by(name=req['name']).first()
+    result = [{"":""}, 200]
+    if excercise is None:
+        result[0] = {"message": "Excercise not found in base"}
+        result[1] = 400
+    else:
+        result[0] = {"message": "Excercise deleted"}
+        result[1] = 200
+        db.session.delete(excercise)
+        db.session.commit()
+    return result
 
 def validateIncomingExcerciseDict(req):
     if  'name' and 'description' and 'movieLink' in req:
@@ -134,25 +141,65 @@ def validateIncomingExcerciseDict(req):
         return False
 
 
-def handleIncomingJson():
-    res = {"":""}
+def handleIncomingJson(action):
+    resMsg = 0
+    resCode = 1
+    result = [{"":""}, 200]
     if request.is_json:
         req = request.get_json()
         if validateIncomingExcerciseDict(req):
-            res = excerciseAddToBaseDict(req)
+            if(action == 'create' or action == 'update'):
+                result = excerciseAddToBaseDict(req)
+            elif(action == 'delete'):
+                result = excerciseRemoveFromBaseDict(req)
         else:
-            res = {"message": "Invalid excercise format"}
+            resMsg = {"message": "Invalid excercise format"}
     else:
-        res = {"message": "Request body must be JSON"}
-    return res
+        resMsg = {"message": "Request body must be JSON"}
+    return make_response(result[resMsg], result[resCode])
 
 def excerciseCreateSerializedImpl():
-    res = handleIncomingJson()
-    return make_response(jsonify(res), 200)
+    return handleIncomingJson('create')
 
+def excerciseUpdateSerializedImpl(id):
+    return handleIncomingJson('update')
 
-#Excercise categorization
-def addDisciplineToExcerciseByName(disciplineName, excerciseName):
-    excercise = Excercise.query.filter_by(name=excerciseName).first()
-    excercise.discipline.append(Discipline.query.filter_by(name=disciplineName).first())
-    return True
+def excerciseDeleteSerializedImpl(id):
+    return handleIncomingJson('delete')
+
+#Tags - Excercise categorization
+def tagsListSerializedImpl():
+    tags = Tag.query.all()
+    serializedTagsList = []
+    for tag in tags:
+        serializedTagsList.append(tag.asDict())
+    return jsonify(serializedTagsList)
+
+def tagByIdImpl(id):
+    tag = Tag.query.get(id)
+    tagJson = tag.asDict()
+    return jsonify(tagJson)
+
+def tagWithExcercisesByIdImpl(id):
+    tag = Tag.query.get(id)
+    excercises = tag.getExcercises()
+    tagWithExcercises = []
+    tagWithExcercises.append(tag.asDict())
+    tagWithExcercises.append(excercises)
+    return jsonify(tagWithExcercises)
+
+def tagGetConnectedExcercises(id):
+    tag = Tag.query.get(id)
+    excercises = excercises = tag.getExcercises()
+    return jsonify(excercises)
+
+def tagGetTagsWithCategory(category):
+    tags = Tag.query.filter_by(category=category)
+    serializedTags = []
+    for tag in tags:
+        serializedTags.append(tag.asDict())
+    return jsonify(serializedTags)
+
+#tag-excercise
+def addTagsListToExcercise(id, tagsList):
+    return Excercise.query.get(id).addTagsList(tagsList)

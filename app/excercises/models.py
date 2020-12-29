@@ -27,6 +27,12 @@ class Excercise(db.Model, SerializerMixin):
         db.session.commit()
         return True
 
+    def addTagsList(self, tagsList):
+        for tag in tagsList:
+            self.tags.append(tag)
+        db.session.commit()
+        return True
+
     def removeTag(self,tag):
         if tag in self.tags:
             self.tags.remove(tag)
@@ -45,6 +51,9 @@ class Excercise(db.Model, SerializerMixin):
         excerciseDict = self.to_dict(rules=('-tags.excercise',))
         return excerciseDict
 
+    def asDictNoTags(self):
+        excerciseDict = self.to_dict(rules=('-tags',))
+        return excerciseDict
 
 class Tag(db.Model, SerializerMixin):
 #fields
@@ -64,3 +73,12 @@ class Tag(db.Model, SerializerMixin):
         self.excercise.append(excercise)
         db.session.commit()
         return True
+
+    def getExcercises(self):
+        excercises = []
+        for e in self.excercise:
+            excercises.append(e.asDictNoTags())
+        return excercises
+
+    def getCategory(self):
+        return self.category

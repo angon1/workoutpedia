@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from app.excercises import bp
-from app.excercises.excerciseDataHandler import excerciseNewImpl, excerciseListImpl, excerciseShowNameImpl, excerciseDeleteImpl, excerciseEditImpl, excerciseListSerializedImpl, excerciseShowNameSerializedImpl, excerciseIdSerializeImpl, excerciseCreateSerializedImpl
+from app.excercises.excerciseDataHandler import *
 
 
 @bp.route('/new', methods=['GET', 'POST'])
@@ -39,3 +39,16 @@ def excerciseIdSerialize(id):
 @bp.route('/create', methods=['POST'])
 def excerciseCreateSerialized():
     return excerciseCreateSerializedImpl()
+
+@bp.route('/<int:id>/serialized/update', methods=['POST'])
+def excerciseCreateUpdate(id):
+    return excerciseUpdateSerializedImpl(id)
+
+@bp.route('/<int:id>/serialized/delete', methods=['POST'])
+def excerciseDeleteSerialized(id):
+    return excerciseDeleteSerializedImpl(id)
+
+#tags
+@bp.route('/tags/list', methods=['GET'])
+def tagsListSerialized():
+    return tagsListSerializedImpl()
