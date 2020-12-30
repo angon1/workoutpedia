@@ -34,7 +34,7 @@ class TestSerializers:
         )
         data = json.loads(response.get_data(as_text=True))
         print(data)
-        assert response.status_code == 201
+        assert response.status_code == 200
         assert data['message'] == 'Succesfuly added to base'
 
     def test_excercise_update_post(self, client, new_excercise, test_excercise):
@@ -43,7 +43,7 @@ class TestSerializers:
         WHEN post  JSONified excercise data to excercise_add url
         THEN check if excercise is added to db
         """
-        updateUrl = 'excercises/{}/serialized/update'.format(new_excercise.id)
+        updateUrl = 'excercises/{}/update'.format(new_excercise.id)
         excerciseJson = json.dumps(test_excercise)
         print(updateUrl)
         response = client.post(
@@ -53,7 +53,7 @@ class TestSerializers:
         )
         data = json.loads(response.get_data(as_text=True))
         print(data)
-        assert response.status_code == 201
+        assert response.status_code == 200
         assert data['message'] == 'Succesfuly updated excercise in base'
 
     def test_excercise_delete_post(self, client, new_excercise, test_excercise):

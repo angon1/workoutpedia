@@ -3,6 +3,8 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, m
 from app.excercises.models import *
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
+from app.excercises.validators import ExcerciseValidator
+from app.excercises.tag_handler import TagHandler
 from json import dumps
 
 
@@ -103,6 +105,14 @@ def excerciseIdGetTagsImpl(id):
     excercise = Excercise.query.get(id)
     return jsonify(excercise.tagsDict())
 
+
+
+#tag-excercise
+def addTagsListToExcercise(id, tagsList):
+    return Excercise.query.get(id).addTagsList(tagsList)
+
+
+
 #Handle remote excercises routines
 def excerciseAddToBaseDict(req):
     excercise = Excercise.query.filter_by(name=req['name']).first()
@@ -111,13 +121,13 @@ def excerciseAddToBaseDict(req):
         excercise = Excercise(name=req['name'], description=req['description'], movieLink=req['movieLink'])
         db.session.add(excercise)
         result[0] = {"message": "Succesfuly added to base"}
-        result[1] = 201
+        result[1] = 200
     else:
         excercise.name = req['name']
         excercise.description = req['description']
         excercise.movieLink = req['movieLink']
         result[0]  = {"message": "Succesfuly updated excercise in base"}
-        result[1] = 201
+        result[1] = 200
     db.session.commit()
     return result
 
@@ -134,72 +144,34 @@ def excerciseRemoveFromBaseDict(req):
         db.session.commit()
     return result
 
-def validateIncomingExcerciseDict(req):
-    if  'name' and 'description' and 'movieLink' in req:
-        return True
-    else:
-        return False
+class ExcerciseRequestHandler:
+    def __init__(self):
+        self.response_message_field = 0
+        self.response_code_field = 1
+        self.result = [{"":""}, 200]
 
-
-def handleIncomingJson(action):
-    resMsg = 0
-    resCode = 1
-    result = [{"":""}, 200]
-    if request.is_json:
-        req = request.get_json()
-        if validateIncomingExcerciseDict(req):
-            if(action == 'create' or action == 'update'):
-                result = excerciseAddToBaseDict(req)
-            elif(action == 'delete'):
-                result = excerciseRemoveFromBaseDict(req)
+    def handleIncomingJson(self, action):
+        if request.is_json:
+            req = request.get_json()
+            if ExcerciseValidator.validate(req):
+                if(action == 'create' or action == 'update'):
+                    result = excerciseAddToBaseDict(req)
+                elif(action == 'delete'):
+                    result = excerciseRemoveFromBaseDict(req)
+            else:
+                self.response_message_field = {"message": "Invalid excercise format"}
         else:
-            resMsg = {"message": "Invalid excercise format"}
-    else:
-        resMsg = {"message": "Request body must be JSON"}
-    return make_response(result[resMsg], result[resCode])
+            self.response_message_field = {"message": "Request body must be JSON"}
+        return make_response(result[self.response_message_field], result[self.response_code_field])
 
-def excerciseCreateSerializedImpl():
-    return handleIncomingJson('create')
+    @staticmethod
+    def create():
+        return ExcerciseRequestHandler().handleIncomingJson('create')
 
-def excerciseUpdateSerializedImpl(id):
-    return handleIncomingJson('update')
+    @staticmethod
+    def update(id):
+        return ExcerciseRequestHandler().handleIncomingJson('update')
 
-def excerciseDeleteSerializedImpl(id):
-    return handleIncomingJson('delete')
-
-#Tags - Excercise categorization
-def tagsListSerializedImpl():
-    tags = Tag.query.all()
-    serializedTagsList = []
-    for tag in tags:
-        serializedTagsList.append(tag.asDict())
-    return jsonify(serializedTagsList)
-
-def tagByIdImpl(id):
-    tag = Tag.query.get(id)
-    tagJson = tag.asDict()
-    return jsonify(tagJson)
-
-def tagWithExcercisesByIdImpl(id):
-    tag = Tag.query.get(id)
-    excercises = tag.getExcercises()
-    tagWithExcercises = []
-    tagWithExcercises.append(tag.asDict())
-    tagWithExcercises.append(excercises)
-    return jsonify(tagWithExcercises)
-
-def tagGetConnectedExcercises(id):
-    tag = Tag.query.get(id)
-    excercises = excercises = tag.getExcercises()
-    return jsonify(excercises)
-
-def tagGetTagsWithCategory(category):
-    tags = Tag.query.filter_by(category=category)
-    serializedTags = []
-    for tag in tags:
-        serializedTags.append(tag.asDict())
-    return jsonify(serializedTags)
-
-#tag-excercise
-def addTagsListToExcercise(id, tagsList):
-    return Excercise.query.get(id).addTagsList(tagsList)
+    @staticmethod
+    def delete(id):
+        return ExcerciseRequestHandler().handleIncomingJson('delete')

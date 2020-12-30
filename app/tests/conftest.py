@@ -63,6 +63,13 @@ def test_excercise():
     }
 
 @pytest.fixture(scope='module')
+def test_excercise_incorrect():
+    return {
+        'name':'unittest1',
+        'description':'description1',
+    }
+
+@pytest.fixture(scope='module')
 def test_tags():
     return [
         {
@@ -72,6 +79,14 @@ def test_tags():
         {
             'name':'tag2',
             'category':'category2'
+        }
+    ]
+
+@pytest.fixture(scope='module')
+def test_tags_incorrect():
+    return [
+        {
+            'name':'tag1',
         }
     ]
 

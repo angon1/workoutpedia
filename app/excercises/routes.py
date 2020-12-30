@@ -38,15 +38,15 @@ def excerciseIdSerialize(id):
 
 @bp.route('/create', methods=['POST'])
 def excerciseCreateSerialized():
-    return excerciseCreateSerializedImpl()
+    return ExcerciseRequestHandler.create()
 
-@bp.route('/<int:id>/serialized/update', methods=['POST'])
+@bp.route('/<int:id>/update', methods=['POST'])
 def excerciseCreateUpdate(id):
-    return excerciseUpdateSerializedImpl(id)
+    return ExcerciseRequestHandler.update(id)
 
 @bp.route('/<int:id>/serialized/delete', methods=['POST'])
 def excerciseDeleteSerialized(id):
-    return excerciseDeleteSerializedImpl(id)
+    return ExcerciseRequestHandler.delete(id)
 
 #tags
 @bp.route('/tags/list', methods=['GET'])
