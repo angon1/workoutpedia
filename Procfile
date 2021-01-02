@@ -1,2 +1,2 @@
 web: flask db upgrade
-web: gunicorn app.app:app
+web: gunicorn workoutpedia:app
