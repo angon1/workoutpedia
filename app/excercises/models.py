@@ -1,7 +1,7 @@
 from flask import current_app
 from app import db
 from sqlalchemy_serializer import SerializerMixin
-
+from .validators import ExcerciseValidator
 
 excerciseToTag = db.Table(
     "excercisetotag",
@@ -61,6 +61,9 @@ class Excercise(db.Model, SerializerMixin):
         excerciseDict = self.to_dict(rules=("-tags",))
         return excerciseDict
 
+    @classmethod
+    def from_json_request(cls, params):
+        if params is
 
 class Tag(db.Model, SerializerMixin):
     # fields

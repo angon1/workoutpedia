@@ -136,61 +136,98 @@ def addTagsListToExcercise(id, tagsList):
 
 
 # Handle remote excercises routines
-def excerciseAddToBaseDict(req):
-    excercise = Excercise.query.filter_by(name=req["name"]).first()
-    result = [{"": ""}, 200]
+def excerciseAddToBaseDict(excercise_params):
+    excercise = get_excercise_or_none(excercise_params["name"])
     if excercise is None:
         excercise = Excercise(
-            name=req["name"], description=req["description"], movieLink=req["movieLink"]
+            name=excercise_params["name"], description=excercise_params["description"], movieLink=excercise_params["movieLink"]
         )
         db.session.add(excercise)
-        result[0] = {"message": "Succesfuly added to base"}
-        result[1] = 200
+        db.session.commit()
+        return ExcerciseResponse(200, {"message": "Succesfuly added to base"})
     else:
-        excercise.name = req["name"]
-        excercise.description = req["description"]
-        excercise.movieLink = req["movieLink"]
+        excercise.name = excercise_params["name"]
+        excercise.description = excercise_params["description"]
+        excercise.movieLink = excercise_params["movieLink"]
+        db.session.commit()
+        return ExcerciseResponse(200, {"message": "Succesfuly updated excercise in base"})
+
+
+def get_excercise_or_none(name):
+    return Excercise.query.filter_by(name=name).first()
+
+
+def excercise_update(excercise_params):
+    result = [{"": ""}, 200]
+    excercise = get_excercise_or_none(excercise_params["name"])
+    if excercise is None:
+        result[0] = {"message": "Not found"}
+        result[1] = 400
+    else:
+        excercise.name = excercise_params["name"]
+        excercise.description = excercise_params["description"]
+        excercise.movieLink = excercise_params["movieLink"]
         result[0] = {"message": "Succesfuly updated excercise in base"}
         result[1] = 200
+
+
     db.session.commit()
     return result
 
-
-def excerciseRemoveFromBaseDict(req):
-    excercise = Excercise.query.filter_by(name=req["name"]).first()
-    result = [{"": ""}, 200]
+def excerciseRemoveFromBaseDict(excercise_params):
+    excercise = get_excercise_or_none(excercise_params["name"])
     if excercise is None:
-        result[0] = {"message": "Excercise not found in base"}
-        result[1] = 400
+        return ExcerciseResponse(400, {"message": "Excercise not found in base"})
     else:
-        result[0] = {"message": "Excercise deleted"}
-        result[1] = 200
         db.session.delete(excercise)
         db.session.commit()
-    return result
+        return ExcerciseResponse(200, {"message": "Excercise deleted"})
+
+
+
+
+def check_if_request_is_json():
+    if request.is_json:
+        return request.get_json()
+    else:
+        return False
+
+def zmien_te_nazwe(request, action):
+    if action == "create" or action == "update":
+        return excerciseAddToBaseDict(request)
+    elif action == "delete":
+        return excerciseRemoveFromBaseDict(request)
+
+class ExcerciseResponse:
+    def __init__(self, code, msg):
+        self.message_dict = msg
+        self.status_code = code
+
+    def update(self, code, msg):
+        self.message_dict = msg
+        self.status_code = code
+
+    def prepare(self):
+        return make_response(self.message_dict, self.status_code)
+
 
 
 class ExcerciseRequestHandler:
     def __init__(self):
         self.response_message_field = 0
         self.response_code_field = 1
-        self.result = [{"": ""}, 200]
+        self.response = ExcerciseResponse(200, {"":""})
 
     def handleIncomingJson(self, action):
         if request.is_json:
-            req = request.get_json()
-            if ExcerciseValidator.validate(req):
-                if action == "create" or action == "update":
-                    result = excerciseAddToBaseDict(req)
-                elif action == "delete":
-                    result = excerciseRemoveFromBaseDict(req)
+            excercise_params = request.get_json()
+            if ExcerciseValidator.validate(excercise_params):
+                self.response = zmien_te_nazwe(excercise_params, action)
             else:
-                self.response_message_field = {"message": "Invalid excercise format"}
+                self.response.update(400, {"message": "Invalid excercise format"})
         else:
-            self.response_message_field = {"message": "Request body must be JSON"}
-        return make_response(
-            result[self.response_message_field], result[self.response_code_field]
-        )
+            self.response.update(400, {"message": "Request body must be JSON"})
+        return self.response.prepare()
 
     @staticmethod
     def create():
