@@ -3,6 +3,7 @@ from app import db
 from sqlalchemy_serializer import SerializerMixin
 from .validators import ExcerciseValidator
 
+
 excerciseToTag = db.Table(
     "excercisetotag",
     db.Column(
@@ -13,11 +14,17 @@ excerciseToTag = db.Table(
 
 
 class Excercise(db.Model, SerializerMixin):
-    # fields
+    # class fields
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True, unique=True)
     description = db.Column(db.String(512), unique=True)
     movieLink = db.Column(db.String(512))
+    # constructor
+    def __init__(self, name, description, movieLink):
+        self.name = name
+        self.description = description
+        self.movieLink = movieLink
+
     # relations
     tags = db.relationship(
         "Tag", secondary=excerciseToTag, lazy=True, back_populates="excercise"
@@ -62,8 +69,28 @@ class Excercise(db.Model, SerializerMixin):
         return excerciseDict
 
     @classmethod
-    def from_json_request(cls, params):
-        if params is
+    def init_from_json_request_or_none(cls, params):
+        if ExcerciseValidator.validate(params):
+            return cls(params["name"], params["description"], params["movieLink"])
+        else:
+            return None
+
+    @classmethod
+    def get_from_db_or_none(cls, name):
+        return cls.query.filter_by(name=name).first()
+
+    # @classmethod
+    # def excercise_update(cls, excercise_params):
+    #     excercise = cls.get_from_db_or_none(excercise_params["name"])
+    #     if excercise is None:
+    #         return False
+    #     else:
+    #         excercise.name = excercise_params["name"]
+    #         excercise.description = excercise_params["description"]
+    #         excercise.movieLink = excercise_params["movieLink"]
+    #         db.session.commit()
+    #         return True
+
 
 class Tag(db.Model, SerializerMixin):
     # fields
