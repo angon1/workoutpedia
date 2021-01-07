@@ -9,29 +9,32 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
-login.login_view = 'users.login'
+login.login_view = "users.login"
 
 
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    #inits
+    # inits
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)
 
-    #blueprints
+    # blueprints
     from app.excercises import bp as excercises_bp
-    app.register_blueprint(excercises_bp, url_prefix='/excercises')
+
+    app.register_blueprint(excercises_bp, url_prefix="/excercises")
 
     from app.users import bp as users_bp
-    app.register_blueprint(users_bp, template_folder='templates')
+
+    app.register_blueprint(users_bp, template_folder="templates")
 
     from app.main import bp as main_bp
-    app.register_blueprint(main_bp, template_folder='templates')
 
-    #debugging
+    app.register_blueprint(main_bp, template_folder="templates")
+
+    # debugging
     if not app.debug and not app.testing:
         print("nothing")
     if app.testing:

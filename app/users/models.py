@@ -7,6 +7,7 @@ from flask_login import UserMixin
 def load_user(id):
     return User.query.get(int(id))
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -20,4 +21,4 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return "<User {}>".format(self.username)

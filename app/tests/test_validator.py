@@ -1,7 +1,8 @@
 from flask import current_app
 from flask import url_for, json, jsonify
-from app.excercises.models import Excercise,Tag
+from app.excercises.models import Excercise, Tag
 from app.excercises.validators import ExcerciseValidator, TagValidator
+
 
 class TestValidators:
     def test_validate_excercise_json(self, client, test_excercise):

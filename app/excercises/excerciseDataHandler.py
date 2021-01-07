@@ -1,5 +1,13 @@
 from flask import current_app
-from flask import render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import (
+    render_template,
+    flash,
+    redirect,
+    url_for,
+    request,
+    jsonify,
+    make_response,
+)
 from app.excercises.models import *
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
@@ -9,20 +17,26 @@ from json import dumps
 
 
 def excerciseAddToBase(form):
-    excercise = Excercise(name=form.name.data, description=form.description.data, movieLink=form.movieLink.data)
+    excercise = Excercise(
+        name=form.name.data,
+        description=form.description.data,
+        movieLink=form.movieLink.data,
+    )
     db.session.add(excercise)
     db.session.commit()
-    flash('Excercise added to db')
+    flash("Excercise added to db")
+
 
 def excerciseNewImpl():
     form = ExcerciseForm()
     if form.validate_on_submit():
         excerciseAddToBase(form)
-        return redirect(url_for('main'))
-    flash('Somehow Excercise can\'t be added')
-    return render_template("edit.html", title='WorkoutPedia', form=form)
+        return redirect(url_for("main"))
+    flash("Somehow Excercise can't be added")
+    return render_template("edit.html", title="WorkoutPedia", form=form)
 
-def excerciseEditOnSubmit(id,form):
+
+def excerciseEditOnSubmit(id, form):
     excercise = Excercise.query.get(id)
     excercise.name = form.name.data
     excercise.description = form.description.data
@@ -30,59 +44,66 @@ def excerciseEditOnSubmit(id,form):
     db.session.commit()
     excercise = Excercise.query.get(id)
     flash("Excercise changes saved")
-    return render_template("show.html", title='WorkoutPedia', excercise=excercise)
+    return render_template("show.html", title="WorkoutPedia", excercise=excercise)
 
 
-def excerciseEditOnGet(id,form):
+def excerciseEditOnGet(id, form):
     excercise = Excercise.query.get(id)
     form.name.data = excercise.name
     form.description.data = excercise.description
     form.movieLink.data = excercise.movieLink
-    return render_template("edit.html", title='WorkoutPedia', id=id, form=form)
+    return render_template("edit.html", title="WorkoutPedia", id=id, form=form)
 
 
 def excerciseEditImpl(id):
     form = ExcerciseForm()
     if form.validate_on_submit():
-        return excerciseEditOnSubmit(id,form)
-    elif request.method == 'GET':
-        return excerciseEditOnGet(id,form)
+        return excerciseEditOnSubmit(id, form)
+    elif request.method == "GET":
+        return excerciseEditOnGet(id, form)
 
 
 def excerciseGetAllFromBase():
     return Excercise.query.all()
 
+
 def excerciseListImpl():
     excerciseList = excerciseGetAllFromBase()
-    return render_template("index.html", title='WorkoutPedia', excerciseList=excerciseList)
+    return render_template(
+        "index.html", title="WorkoutPedia", excerciseList=excerciseList
+    )
 
 
 def excerciseGetFromBase(name):
     return Excercise.query.filter_by(name=name).first()
 
+
 def excerciseShowNameImpl(name):
     excercise = excerciseGetFromBase(name)
-    return render_template("show.html", title='WorkoutPedia', excercise=excercise)
+    return render_template("show.html", title="WorkoutPedia", excercise=excercise)
+
 
 def excerciseDeleteFromBase(id):
     excercise = Excercise.query.get(id)
     db.session.delete(excercise)
     db.session.commit()
-    flash('Excercise {} succesfully removed from db'.format(excercise.name))
+    flash("Excercise {} succesfully removed from db".format(excercise.name))
+
 
 def excerciseDeleteImpl(id):
     excerciseDeleteFromBase(id)
-    return redirect(url_for('excerciseList'))
+    return redirect(url_for("excerciseList"))
 
 
 # Serializers
-#excercises:
+# excercises:
 def excerciseListSerializedImpl():
     excerciseList = Excercise.query.all()
     serializedExcerciseList = []
     for i in excerciseList:
-        serializedExcerciseList.append(i.to_dict(only=('id', 'name')))
+        serializedExcerciseList.append(i.to_dict(only=("id", "name")))
     return jsonify(serializedExcerciseList)
+
 
 def excerciseListSerializedFullImpl():
     excerciseList = Excercise.query.all()
@@ -91,49 +112,53 @@ def excerciseListSerializedFullImpl():
         serializedExcerciseList.append(excercise.asDict())
     return jsonify(serializedExcerciseList)
 
+
 def excerciseShowNameSerializedImpl(name):
     excercise = Excercise.query.filter_by(name=name).one()
     excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
+
 
 def excerciseIdSerializeImpl(id):
     excercise = Excercise.query.get(id)
     excerciseJson = excercise.asDict()
     return jsonify(excerciseJson)
 
+
 def excerciseIdGetTagsImpl(id):
     excercise = Excercise.query.get(id)
     return jsonify(excercise.tagsDict())
 
 
-
-#tag-excercise
+# tag-excercise
 def addTagsListToExcercise(id, tagsList):
     return Excercise.query.get(id).addTagsList(tagsList)
 
 
-
-#Handle remote excercises routines
+# Handle remote excercises routines
 def excerciseAddToBaseDict(req):
-    excercise = Excercise.query.filter_by(name=req['name']).first()
-    result = [{"":""}, 200]
+    excercise = Excercise.query.filter_by(name=req["name"]).first()
+    result = [{"": ""}, 200]
     if excercise is None:
-        excercise = Excercise(name=req['name'], description=req['description'], movieLink=req['movieLink'])
+        excercise = Excercise(
+            name=req["name"], description=req["description"], movieLink=req["movieLink"]
+        )
         db.session.add(excercise)
         result[0] = {"message": "Succesfuly added to base"}
         result[1] = 200
     else:
-        excercise.name = req['name']
-        excercise.description = req['description']
-        excercise.movieLink = req['movieLink']
-        result[0]  = {"message": "Succesfuly updated excercise in base"}
+        excercise.name = req["name"]
+        excercise.description = req["description"]
+        excercise.movieLink = req["movieLink"]
+        result[0] = {"message": "Succesfuly updated excercise in base"}
         result[1] = 200
     db.session.commit()
     return result
 
+
 def excerciseRemoveFromBaseDict(req):
-    excercise = Excercise.query.filter_by(name=req['name']).first()
-    result = [{"":""}, 200]
+    excercise = Excercise.query.filter_by(name=req["name"]).first()
+    result = [{"": ""}, 200]
     if excercise is None:
         result[0] = {"message": "Excercise not found in base"}
         result[1] = 400
@@ -144,34 +169,37 @@ def excerciseRemoveFromBaseDict(req):
         db.session.commit()
     return result
 
+
 class ExcerciseRequestHandler:
     def __init__(self):
         self.response_message_field = 0
         self.response_code_field = 1
-        self.result = [{"":""}, 200]
+        self.result = [{"": ""}, 200]
 
     def handleIncomingJson(self, action):
         if request.is_json:
             req = request.get_json()
             if ExcerciseValidator.validate(req):
-                if(action == 'create' or action == 'update'):
+                if action == "create" or action == "update":
                     result = excerciseAddToBaseDict(req)
-                elif(action == 'delete'):
+                elif action == "delete":
                     result = excerciseRemoveFromBaseDict(req)
             else:
                 self.response_message_field = {"message": "Invalid excercise format"}
         else:
             self.response_message_field = {"message": "Request body must be JSON"}
-        return make_response(result[self.response_message_field], result[self.response_code_field])
+        return make_response(
+            result[self.response_message_field], result[self.response_code_field]
+        )
 
     @staticmethod
     def create():
-        return ExcerciseRequestHandler().handleIncomingJson('create')
+        return ExcerciseRequestHandler().handleIncomingJson("create")
 
     @staticmethod
     def update(id):
-        return ExcerciseRequestHandler().handleIncomingJson('update')
+        return ExcerciseRequestHandler().handleIncomingJson("update")
 
     @staticmethod
     def delete(id):
-        return ExcerciseRequestHandler().handleIncomingJson('delete')
+        return ExcerciseRequestHandler().handleIncomingJson("delete")

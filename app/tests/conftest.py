@@ -1,18 +1,20 @@
 import pytest, tempfile, os
 from app import create_app, db
-from app.excercises.models import Excercise,Tag
+from app.excercises.models import Excercise, Tag
 from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
 
 # db = SQLAlchemy()
 
+
 class TestConfig(Config):
     basedir = os.path.abspath(os.path.dirname(__file__))
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'test.db')
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "test.db")
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope="function")
 def app():
 
     """Create and configure a new app instance for each test."""
@@ -28,10 +30,12 @@ def app():
     db.drop_all()
     app_context.pop()
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope="function")
 def client(app):
     """A test client for the app."""
     return app.test_client()
+
 
 # from config import Config
 # from app import create_app
@@ -52,67 +56,60 @@ def client(app):
 #         self.app_context.pop()
 
 
-
-
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def test_excercise():
-    return {
-        'name':'unittest1',
-        'description':'description1',
-        'movieLink':'link1'
-    }
+    return {"name": "unittest1", "description": "description1", "movieLink": "link1"}
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def test_excercise_incorrect():
     return {
-        'name':'unittest1',
-        'description':'description1',
+        "name": "unittest1",
+        "description": "description1",
     }
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def test_tags():
     return [
-        {
-            'name':'tag1',
-            'category':'category1'
-        },
-        {
-            'name':'tag2',
-            'category':'category2'
-        }
+        {"name": "tag1", "category": "category1"},
+        {"name": "tag2", "category": "category2"},
     ]
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def test_tags_incorrect():
     return [
         {
-            'name':'tag1',
+            "name": "tag1",
         }
     ]
 
-@pytest.fixture(scope='function')
+
+@pytest.fixture(scope="function")
 def new_excercise(app, test_excercise):
-    excercise = Excercise(name=test_excercise['name'], description=test_excercise['description'], movieLink=test_excercise['movieLink'])
+    excercise = Excercise(
+        name=test_excercise["name"],
+        description=test_excercise["description"],
+        movieLink=test_excercise["movieLink"],
+    )
     db.session.add(excercise)
     db.session.commit()
     yield excercise
     excercise.tags = []
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def new_tags(app, test_tags):
     tags = [
-        Tag(name=test_tags[0]['name'],category=test_tags[0]['category']),
-        Tag(name=test_tags[1]['name'],category=test_tags[1]['category'])
-        ]
+        Tag(name=test_tags[0]["name"], category=test_tags[0]["category"]),
+        Tag(name=test_tags[1]["name"], category=test_tags[1]["category"]),
+    ]
     # for tag in tags:
     db.session.add(tags[0])
     db.session.add(tags[1])
     db.session.commit()
     yield tags
-
-
-
 
 
 # @pytest.fixture

@@ -5,23 +5,23 @@ from app.users.userHandling import *
 from app.users import bp
 
 
-#user pages
-@bp.route('/user/<username>')
+# user pages
+@bp.route("/user/<username>")
 def user(username):
     return renderUserPage(username)
 
 
-@bp.route('/login', methods=['GET', 'POST'])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     return loginWorker()
 
 
-@bp.route('/logout')
+@bp.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for('main'))
+    return redirect(url_for("main"))
 
 
-@bp.route('/register', methods=['GET', 'POST'])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
     return registerWorker()

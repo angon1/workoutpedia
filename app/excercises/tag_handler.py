@@ -1,12 +1,20 @@
 from flask import current_app
-from flask import render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import (
+    render_template,
+    flash,
+    redirect,
+    url_for,
+    request,
+    jsonify,
+    make_response,
+)
 from app.excercises.models import *
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
 from app.excercises.validators import ExcerciseValidator
 from json import dumps
 
-#Tags - Excercise categorization
+# Tags - Excercise categorization
 class TagHandler:
     def get_json_list(self):
         tags = Tag.query.all()
