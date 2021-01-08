@@ -215,14 +215,14 @@ class ExcerciseRequestHandler:
             self.response.update(400, {"message": "Request body must be JSON"})
         return self.response.prepare()
 
-    def update_proceed(self):
-        excercise = Excercise.get_from_db_or_none(self.excercise_params["name"])
+    def update_proceed(self, excercise_params):
+        excercise = Excercise.get_from_db_or_none(excercise_params["name"])
         if excercise is None:
             return ExcerciseResponse(400, "Excercise not found").prepare()
         else:
-            excercise.name = self.excercise_params["name"]
-            excercise.description = self.excercise_params["description"]
-            excercise.movieLink = self.excercise_params["movieLink"]
+            excercise.name = excercise_params["name"]
+            excercise.description = excercise_params["description"]
+            excercise.movieLink = excercise_params["movieLink"]
             db.session.commit()
             return ExcerciseResponse(
                 200, "Succesfuly updated excercise in base"
@@ -234,7 +234,17 @@ class ExcerciseRequestHandler:
 
     @staticmethod
     def update(id):
-        return ExcerciseRequestHandler().update_proceed()
+        excercise_params = request.get_json()
+        if excercise_params is None:
+            return ExcerciseResponse(
+                400, {"message": "Request body must be JSON"}
+            ).prepare()
+        if ExcerciseValidator.validate(excercise_params):
+            return ExcerciseRequestHandler().update_proceed(excercise_params)
+        else:
+            return ExcerciseResponse(
+                400, {"message": "Excercise params from request not valid"}
+            ).prepare()
 
     @staticmethod
     def delete(id):
