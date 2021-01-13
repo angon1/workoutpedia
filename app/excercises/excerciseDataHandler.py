@@ -136,51 +136,6 @@ def addTagsListToExcercise(id, tagsList):
 
 
 # Handle remote excercises routines
-def excerciseAddToBaseDict(excercise_params):
-    excercise = get_excercise_or_none(excercise_params["name"])
-    if excercise is None:
-        excercise = Excercise(
-            name=excercise_params["name"],
-            description=excercise_params["description"],
-            movieLink=excercise_params["movieLink"],
-        )
-        db.session.add(excercise)
-        db.session.commit()
-        return ExcerciseResponse(200, "Succesfuly added to base")
-    else:
-        excercise.name = excercise_params["name"]
-        excercise.description = excercise_params["description"]
-        excercise.movieLink = excercise_params["movieLink"]
-        db.session.commit()
-        return ExcerciseResponse(200, "Succesfuly updated excercise in base")
-
-
-def excerciseRemoveFromBaseDict(excercise_params):
-    excercise = get_excercise_or_none(excercise_params["name"])
-    if excercise is None:
-        return ExcerciseResponse(400, "Excercise not found in base")
-    else:
-        db.session.delete(excercise)
-        db.session.commit()
-        return ExcerciseResponse(200, "Excercise deleted")
-
-
-def check_if_request_is_json():
-    if request.is_json:
-        return request.get_json()
-    else:
-        return False
-
-
-def zmien_te_nazwe(excercise_params, action):
-    if action == "create":
-        return excerciseAddToBaseDict(excercise_params)
-    elif action == "update":
-        return excerciseAddToBaseDict(excercise_params)
-    elif action == "delete":
-        return excerciseRemoveFromBaseDict(excercise_params)
-
-
 class ExcerciseResponse:
     def __init__(self, code, msg):
         self.message_dict = {"message": msg}
@@ -199,56 +154,41 @@ class ExcerciseParams:
         self.params = json
 
 
-def get_excercise_or_none(name):
-    return Excercise.query.filter_by(name=name).first()
-
-
 class ExcerciseRequestHandler:
-    def __init__(self):
-        self.excercise_params = request.get_json()
-        self.response = ExcerciseResponse(200, "")
-
-    def handle_request(self, action):
-        if self.excercise_params is not None:
-            self.response = zmien_te_nazwe(self.excercise_params, action)
-        else:
-            self.response.update(400, {"message": "Request body must be JSON"})
-        return self.response.prepare()
-
-    def update_proceed(self, excercise_params):
-        excercise = Excercise.get_from_db_or_none(excercise_params["name"])
+    @staticmethod
+    def create():
+        excercise_params = request.get_json()
+        excercise = Excercise.create_or_none_if_already_in_db(excercise_params)
         if excercise is None:
+            return ExcerciseResponse(400, "Excercise already in base").prepare()
+        else:
+            db.session.add(excercise)
+            db.session.commit()
+            return ExcerciseResponse(200, "Succesfuly added to base").prepare()
+
+    @staticmethod
+    def update(id):
+        excercise_params = ExcerciseValidator.validate_request(request)
+        if excercise_params is False:
+            return ExcerciseResponse(
+                400, "Request body must be proper excercise JSON"
+            ).prepare()
+        if not Excercise.update(id, excercise_params):
             return ExcerciseResponse(400, "Excercise not found").prepare()
         else:
-            excercise.name = excercise_params["name"]
-            excercise.description = excercise_params["description"]
-            excercise.movieLink = excercise_params["movieLink"]
-            db.session.commit()
             return ExcerciseResponse(
                 200, "Succesfuly updated excercise in base"
             ).prepare()
 
     @staticmethod
-    def create():
-        return ExcerciseRequestHandler().handle_request("create")
-
-    @staticmethod
-    def update(id):
-        excercise_params = request.get_json()
-        if excercise_params is None:
-            return ExcerciseResponse(
-                400, {"message": "Request body must be JSON"}
-            ).prepare()
-        if ExcerciseValidator.validate(excercise_params):
-            return ExcerciseRequestHandler().update_proceed(excercise_params)
-        else:
-            return ExcerciseResponse(
-                400, {"message": "Excercise params from request not valid"}
-            ).prepare()
-
-    @staticmethod
     def delete(id):
-        return ExcerciseRequestHandler().handle_request("delete")
+        excercise = Excercise.get_from_db_or_none(id)
+        if excercise is None:
+            return ExcerciseResponse(400, "Excercise not found in base").prepare()
+        else:
+            db.session.delete(excercise)
+            db.session.commit()
+            return ExcerciseResponse(200, "Excercise deleted").prepare()
 
     # def get_json_from_request_or_none()
 

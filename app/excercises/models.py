@@ -76,8 +76,27 @@ class Excercise(db.Model, SerializerMixin):
             return None
 
     @classmethod
-    def get_from_db_or_none(cls, name):
-        return cls.query.filter_by(name=name).first()
+    def get_from_db_or_none(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    @classmethod
+    def create_or_none_if_already_in_db(cls, params):
+        if cls.query.filter_by(name=params["name"]).first() is not None:
+            return None
+        else:
+            return cls.init_from_json_request_or_none(params)
+
+    @classmethod
+    def update(cls, id, params):
+        excercise = cls.query.filter_by(id=id).first()
+        if excercise is None:
+            return False
+        else:
+            excercise.name = params["name"]
+            excercise.description = params["description"]
+            excercise.movieLink = params["movieLink"]
+            db.session.commit()
+            return True
 
     # @classmethod
     # def excercise_update(cls, excercise_params):

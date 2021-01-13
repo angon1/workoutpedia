@@ -21,6 +21,13 @@ class ExcerciseValidator:
         else:
             return False
 
+    def validate_request(request):
+        excercise_params = request.get_json()
+        if "name" and "description" and "movieLink" in excercise_params:
+            return excercise_params
+        else:
+            return False
+
 
 class TagValidator:
     def validate(data):
