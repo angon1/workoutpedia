@@ -17,6 +17,7 @@ from json import dumps
 
 
 def excerciseAddToBase(form):
+    print("trolololo \n {} \n".format(request))
     excercise = Excercise(
         name=form.name.data,
         description=form.description.data,
@@ -28,10 +29,12 @@ def excerciseAddToBase(form):
 
 
 def excerciseNewImpl():
+
     form = ExcerciseForm()
     if form.validate_on_submit():
         excerciseAddToBase(form)
-        return redirect(url_for("main"))
+        print("tralalalalala \n {} \n".format(request))
+        return redirect(url_for("main.main"))
     flash("Somehow Excercise can't be added")
     return render_template("edit.html", title="WorkoutPedia", form=form)
 
@@ -148,6 +151,10 @@ class ExcerciseResponse:
     def prepare(self):
         return make_response(self.message_dict, self.status_code)
 
+    @classmethod
+    def error_not_json(cls):
+        return cls(400, "Request body must be proper tag JSON").prepare()
+
 
 class ExcerciseParams:
     def __init__(self, json):
@@ -170,9 +177,7 @@ class ExcerciseRequestHandler:
     def update(id):
         excercise_params = ExcerciseValidator.validate_request(request)
         if excercise_params is False:
-            return ExcerciseResponse(
-                400, "Request body must be proper excercise JSON"
-            ).prepare()
+            return ExcerciseResponse.error_not_json()
         if not Excercise.update(id, excercise_params):
             return ExcerciseResponse(400, "Excercise not found").prepare()
         else:
@@ -189,8 +194,3 @@ class ExcerciseRequestHandler:
             db.session.delete(excercise)
             db.session.commit()
             return ExcerciseResponse(200, "Excercise deleted").prepare()
-
-    # def get_json_from_request_or_none()
-
-    # def return_error_when_no_json()
-    #     ret response
