@@ -155,6 +155,26 @@ class ExcerciseResponse:
     def error_not_json(cls):
         return cls(400, "Request body must be proper tag JSON").prepare()
 
+    @classmethod
+    def error_not_found(cls):
+        return cls(400, "Excercise not found").prepare()
+
+    @classmethod
+    def error_can_not_be_created_already_exist(cls):
+        return cls(400, "Excercise can't be created, already in base").prepare()
+
+    @classmethod
+    def ok_created(cls):
+        return cls(200, "Succesfuly added to base").prepare()
+
+    @classmethod
+    def ok_updated(cls):
+        return cls(200, "Succesfuly updated excercise in base").prepare()
+
+    @classmethod
+    def ok_deleted(cls):
+        return cls(200, "Excercise deleted").prepare()
+
 
 class ExcerciseParams:
     def __init__(self, json):
@@ -164,14 +184,11 @@ class ExcerciseParams:
 class ExcerciseRequestHandler:
     @staticmethod
     def create():
-        excercise_params = request.get_json()
-        excercise = Excercise.create_or_none_if_already_in_db(excercise_params)
-        if excercise is None:
-            return ExcerciseResponse(400, "Excercise already in base").prepare()
+        excercise_params = ExcerciseValidator.validate_request(request)
+        if Excercise.create_or_none_if_already_in_db(excercise_params) is False:
+            return ExcerciseResponse.error_can_not_be_created_already_exist()
         else:
-            db.session.add(excercise)
-            db.session.commit()
-            return ExcerciseResponse(200, "Succesfuly added to base").prepare()
+            return ExcerciseResponse.ok_created()
 
     @staticmethod
     def update(id):
@@ -179,18 +196,13 @@ class ExcerciseRequestHandler:
         if excercise_params is False:
             return ExcerciseResponse.error_not_json()
         if not Excercise.update(id, excercise_params):
-            return ExcerciseResponse(400, "Excercise not found").prepare()
+            return ExcerciseResponse.error_not_found()
         else:
-            return ExcerciseResponse(
-                200, "Succesfuly updated excercise in base"
-            ).prepare()
+            return ExcerciseResponse.ok_updated()
 
     @staticmethod
     def delete(id):
-        excercise = Excercise.get_from_db_or_none(id)
-        if excercise is None:
-            return ExcerciseResponse(400, "Excercise not found in base").prepare()
+        if Excercise.remove_from_db(id) is False:
+            return ExcerciseResponse.error_not_found()
         else:
-            db.session.delete(excercise)
-            db.session.commit()
-            return ExcerciseResponse(200, "Excercise deleted").prepare()
+            return ExcerciseResponse.ok_deleted()

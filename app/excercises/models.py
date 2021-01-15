@@ -81,10 +81,14 @@ class Excercise(db.Model, SerializerMixin):
 
     @classmethod
     def create_or_none_if_already_in_db(cls, params):
-        if cls.query.filter_by(name=params["name"]).first() is not None:
-            return None
+        excercise = cls.query.filter_by(name=params["name"]).first()
+        if excercise is not None:
+            return False
         else:
-            return cls.init_from_json_request_or_none(params)
+            excercise = cls(params["name"], params["description"], params["movieLink"])
+            db.session.add(excercise)
+            db.session.commit()
+            return True
 
     @classmethod
     def update(cls, id, params):
@@ -95,6 +99,16 @@ class Excercise(db.Model, SerializerMixin):
             excercise.name = params["name"]
             excercise.description = params["description"]
             excercise.movieLink = params["movieLink"]
+            db.session.commit()
+            return True
+
+    @classmethod
+    def remove_from_db(cls, id):
+        excercise = cls.query.filter_by(id=id).first()
+        if excercise is None:
+            return False
+        else:
+            db.session.delete(excercise)
             db.session.commit()
             return True
 

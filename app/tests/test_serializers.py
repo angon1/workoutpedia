@@ -14,8 +14,6 @@ class TestSerializers:
         THEN check if proper excercise dictionary is returned
         """
         excerciseDict = new_excercise.asDict()
-        # print(excerciseDict)
-        # print("body: {}".format(client.get("excercises/unittest1/serialized").body))
         data = json.loads(client.get("excercises/unittest1/serialized").get_data())
         print(data)
         assert data == excerciseDict
@@ -93,7 +91,7 @@ class TestSerializers:
         data = json.loads(response.get_data(as_text=True))
         print(data)
         assert response.status_code == 400
-        assert data["message"] == "Excercise not found in base"
+        assert data["message"] == "Excercise not found"
 
     # def test_tags_dict(self, client, new_tags):
     #     """
