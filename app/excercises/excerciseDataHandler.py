@@ -6,14 +6,10 @@ from flask import (
     url_for,
     request,
     jsonify,
-    make_response,
 )
-from app.excercises.models import *
+from app.excercises.models import Excercise, Tag
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
-from app.excercises.validators import ExcerciseValidator
-from app.excercises.tag_handler import TagHandler
-from json import dumps
 
 
 def excerciseAddToBase(form):
@@ -133,76 +129,6 @@ def excerciseIdGetTagsImpl(id):
     return jsonify(excercise.tagsDict())
 
 
-# tag-excercise
-def addTagsListToExcercise(id, tagsList):
-    return Excercise.query.get(id).addTagsList(tagsList)
-
-
-# Handle remote excercises routines
-class ExcerciseResponse:
-    def __init__(self, code, msg):
-        self.message_dict = {"message": msg}
-        self.status_code = code
-
-    def update(self, code, msg):
-        self.message_dict = msg
-        self.status_code = code
-
-    def prepare(self):
-        return make_response(self.message_dict, self.status_code)
-
-    @classmethod
-    def error_not_json(cls):
-        return cls(400, "Request body must be proper tag JSON").prepare()
-
-    @classmethod
-    def error_not_found(cls):
-        return cls(400, "Excercise not found").prepare()
-
-    @classmethod
-    def error_can_not_be_created_already_exist(cls):
-        return cls(400, "Excercise can't be created, already in base").prepare()
-
-    @classmethod
-    def ok_created(cls):
-        return cls(200, "Succesfuly added to base").prepare()
-
-    @classmethod
-    def ok_updated(cls):
-        return cls(200, "Succesfuly updated excercise in base").prepare()
-
-    @classmethod
-    def ok_deleted(cls):
-        return cls(200, "Excercise deleted").prepare()
-
-
-class ExcerciseParams:
-    def __init__(self, json):
-        self.params = json
-
-
-class ExcerciseRequestHandler:
-    @staticmethod
-    def create():
-        excercise_params = ExcerciseValidator.validate_request(request)
-        if Excercise.create_or_none_if_already_in_db(excercise_params) is False:
-            return ExcerciseResponse.error_can_not_be_created_already_exist()
-        else:
-            return ExcerciseResponse.ok_created()
-
-    @staticmethod
-    def update(id):
-        excercise_params = ExcerciseValidator.validate_request(request)
-        if excercise_params is False:
-            return ExcerciseResponse.error_not_json()
-        if not Excercise.update(id, excercise_params):
-            return ExcerciseResponse.error_not_found()
-        else:
-            return ExcerciseResponse.ok_updated()
-
-    @staticmethod
-    def delete(id):
-        if Excercise.remove_from_db(id) is False:
-            return ExcerciseResponse.error_not_found()
-        else:
-            return ExcerciseResponse.ok_deleted()
+# # tag-excercise
+# def addTagsListToExcercise(id, tagsList):
+#     return Excercise.query.get(id).addTagsList(tagsList)
