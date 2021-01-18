@@ -1,6 +1,10 @@
-from flask import render_template, flash, redirect, url_for, request, current_app
-from app.excercises import bp
-from app.excercises.excerciseDataHandler import *
+from flask import request, current_app
+from . import bp
+from .excercise_request_handler import ExcerciseRequestHandler
+from .excercise_response import ExcerciseResponse
+
+# to remove
+from .excerciseDataHandler import *
 
 
 @bp.route("/new", methods=["GET", "POST"])
