@@ -61,7 +61,7 @@ class TestSerializers:
         WHEN post  JSONified excercise data to excercise_add url
         THEN check if excercise is added to db
         """
-        deleteUrl = "excercises/{}/serialized/delete".format(new_excercise.id)
+        deleteUrl = "excercises/{}/delete".format(new_excercise.id)
         excerciseJson = json.dumps(test_excercise)
         print(deleteUrl)
         response = client.post(
@@ -80,7 +80,7 @@ class TestSerializers:
         WHEN post  JSONified excercise data to excercise_add url
         THEN check if excercise is added to db
         """
-        deleteUrl = "excercises/123/serialized/delete"
+        deleteUrl = "excercises/123/delete"
         excerciseJson = json.dumps(test_excercise)
         print(deleteUrl)
         response = client.post(

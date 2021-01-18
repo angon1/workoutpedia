@@ -10,6 +10,7 @@ from flask import (
 from app.excercises.models import Excercise, Tag
 from werkzeug.urls import url_parse
 from app.excercises.forms import ExcerciseForm
+from .excercise_request_handler import ExcerciseRequestHandler
 
 
 def excerciseAddToBase(form):
@@ -90,8 +91,7 @@ def excerciseDeleteFromBase(id):
 
 
 def excerciseDeleteImpl(id):
-    excerciseDeleteFromBase(id)
-    return redirect(url_for("excerciseList"))
+    return ExcerciseRequestHandler.delete(id)
 
 
 # Serializers
