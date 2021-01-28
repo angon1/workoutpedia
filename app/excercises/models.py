@@ -112,17 +112,10 @@ class Excercise(db.Model, SerializerMixin):
             db.session.commit()
             return True
 
-    # @classmethod
-    # def excercise_update(cls, excercise_params):
-    #     excercise = cls.get_from_db_or_none(excercise_params["name"])
-    #     if excercise is None:
-    #         return False
-    #     else:
-    #         excercise.name = excercise_params["name"]
-    #         excercise.description = excercise_params["description"]
-    #         excercise.movieLink = excercise_params["movieLink"]
-    #         db.session.commit()
-    #         return True
+    def find_by_name(name):
+        excercise = Excercise.query.filter_by(name=name).one()
+        excerciseJson = excercise.asDict()
+        return jsonify(excerciseJson)
 
 
 class Tag(db.Model, SerializerMixin):

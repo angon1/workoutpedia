@@ -5,7 +5,7 @@ from flask import (
 
 
 class ExcerciseResponse:
-    def __init__(self, code, msg):
+    def __init__(self, code=200, msg=""):
         self.message_dict = {"message": msg}
         self.status_code = code
 
@@ -39,3 +39,9 @@ class ExcerciseResponse:
     @classmethod
     def ok_deleted(cls):
         return cls(200, "Excercise deleted").prepare()
+
+    @classmethod
+    def ok_exercise_found(cls, exercise):
+        response = cls()
+        response.update(200, exercise)
+        return response.prepare()
