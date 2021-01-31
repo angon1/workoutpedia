@@ -5,7 +5,9 @@ from app.excercises.excercise_request_handler import ExcerciseRequestHandler
 
 
 class TestExcerciseRequestDispatcher:
-    def test_processing_create_request(self, client, test_excercise):
+    def test_processing_create_excercise_request_and_success(
+        self, client, test_excercise
+    ):
         with current_app.test_request_context(method="POST", json=test_excercise):
             print("\n\nrequest = {}".format(request))
             # ExcerciseRequestHandler.process_create_request()
@@ -16,100 +18,24 @@ class TestExcerciseRequestDispatcher:
     # DispatcherInterface()
     # DisptarchersUtilty() - elemnty wspolne
 
-    # def test_delete_excercise_from_db()
+    # def - create, update, get, get_id, get_name, get_list - permisions for users
 
-    # def test_add_tag_to_excercise()
+    # def test_delete_excercise_from_db_and_success()
 
-    # DispatcherExcerciseRequest
-    # dyspozytor.zwaliduj_ten_request_potem_obsluz_ten_request_i_potwierdz_czy_sie_udalo_czy_nie(ten_request)
-    # rozdzielacz_zadań
+    # def test_delete_excercise_from_db_and_fail()
 
-    # ExcerciseRequestHandler.process_nazw
+    # def test_update_excercise_and_fail_because_exercise_does_not_exist()
 
-    # Dispatcher.process_request(request, typ danych, rodzaj_requestu)
-    # RequestDispatcher.process_request(request, excercise, create)
-    # def test_excercise_dict(self, client, new_excercise):
-    #     """
-    #     GIVEN an Excercise model and excercise dictionary
-    #     WHEN GET is send to excercise url
-    #     THEN check if proper excercise dictionary is returned
-    #     """
-    #     excerciseDict = new_excercise.asDict()
-    #     data = json.loads(client.get("excercises/unittest1/serialized").get_data())
-    #     print(data)
-    #     assert data == excerciseDict
+    # def def test_processing_create_excercise_request_and_fail_because_exercise_exist()
 
-    # def test_excercise_add_post(self, client, test_excercise):
-    #     """
-    #     GIVEN a test excercise data
-    #     WHEN post  JSONified excercise data to excercise_add url
-    #     THEN check if excercise is added to db
-    #     """
-    #     excerciseJson = json.dumps(test_excercise)
-    #     print(excerciseJson)
-    #     response = client.post(
-    #         "excercises/create",
-    #         data=excerciseJson,
-    #         content_type="application/json",
-    #     )
-    #     data = json.loads(response.get_data(as_text=True))
-    #     print(data)
-    #     assert response.status_code == 200
-    #     assert data["message"] == "Succesfuly added to base"
+    # def test_update_exercise_and_success()
 
-    # def test_excercise_update_post(self, client, new_excercise, test_excercise):
-    #     """
-    #     GIVEN a test excercise data
-    #     WHEN post  JSONified excercise data to excercise_add url
-    #     THEN check if excercise is added to db
-    #     """
-    #     updateUrl = "excercises/{}/update".format(new_excercise.id)
-    #     excerciseJson = json.dumps(test_excercise)
-    #     print(updateUrl)
-    #     response = client.post(
-    #         updateUrl,
-    #         data=excerciseJson,
-    #         content_type="application/json",
-    #     )
-    #     data = json.loads(response.get_data(as_text=True))
-    #     print(data)
-    #     assert response.status_code == 200
-    #     assert data["message"] == "Succesfuly updated excercise in base"
+    # def test_add_tag_to_excercise_success()
 
-    # def test_excercise_delete_post(self, client, new_excercise, test_excercise):
-    #     """
-    #     GIVEN a test excercise data
-    #     WHEN post  JSONified excercise data to excercise_add url
-    #     THEN check if excercise is added to db
-    #     """
-    #     deleteUrl = "excercises/{}/delete".format(new_excercise.id)
-    #     excerciseJson = json.dumps(test_excercise)
-    #     print(deleteUrl)
-    #     response = client.post(
-    #         deleteUrl,
-    #         data=excerciseJson,
-    #         content_type="application/json",
-    #     )
-    #     data = json.loads(response.get_data(as_text=True))
-    #     print(data)
-    #     assert response.status_code == 200
-    #     assert data["message"] == "Excercise deleted"
+    # def test_add_tag_to_excercise_fail_tag_alredy_added()
 
-    # def test_excercise_delete_not_in_base_post(self, client, test_excercise):
-    #     """
-    #     GIVEN a test excercise data
-    #     WHEN post  JSONified excercise data to excercise_add url
-    #     THEN check if excercise is added to db
-    #     """
-    #     deleteUrl = "excercises/123/delete"
-    #     excerciseJson = json.dumps(test_excercise)
-    #     print(deleteUrl)
-    #     response = client.post(
-    #         deleteUrl,
-    #         data=excerciseJson,
-    #         content_type="application/json",
-    #     )
-    #     data = json.loads(response.get_data(as_text=True))
-    #     print(data)
-    #     assert response.status_code == 400
-    #     assert data["message"] == "Excercise not found"
+    # def test_get_tags_for_exercise()
+
+    # def test_remove_tag_from_exercise_success()
+
+    # def test_remove_tag_from_exercise_fail_no_tag()
