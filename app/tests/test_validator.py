@@ -1,29 +1,29 @@
 from flask import current_app
 from flask import url_for, json, jsonify
-from app.excercises.models import Excercise, Tag
-from app.excercises.validators import ExcerciseValidator, TagValidator
+from app.exercises.models import Exercise, Tag
+from app.exercises.validators import ExerciseValidator, TagValidator
 
 
 class TestValidators:
-    def test_validate_excercise_json(self, client, test_excercise):
+    def test_validate_exercise_json(self, client, test_exercise):
         """
-        GIVEN correct json of Excercise
-        WHEN validator for excercise is called
+        GIVEN correct json of Exercise
+        WHEN validator for exercise is called
         THEN check if True is returned
         """
-        data = json.dumps(test_excercise)
+        data = json.dumps(test_exercise)
         print(data)
-        assert True == ExcerciseValidator.validate(data)
+        assert True == ExerciseValidator.validate(data)
 
-    def test_validate_excercise_incorrect_json(self, client, test_excercise_incorrect):
+    def test_validate_exercise_incorrect_json(self, client, test_exercise_incorrect):
         """
-        GIVEN incorrect json of Excercise
-        WHEN validator for excercise is called
+        GIVEN incorrect json of Exercise
+        WHEN validator for exercise is called
         THEN check if True is returned
         """
-        data = json.dumps(test_excercise_incorrect)
+        data = json.dumps(test_exercise_incorrect)
         print(data)
-        assert False == ExcerciseValidator.validate(data)
+        assert False == ExerciseValidator.validate(data)
 
     def test_validate_tag_incorrect_json(self, client, test_tags_incorrect):
         """

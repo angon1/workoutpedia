@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block content %}
+        <div>
+            <p>Exercise name: {{ exercise.name }}<br></p>
+            <p>Exercise description: <br></p>
+            <p> {{ exercise.description }}<br></p>
+            <iframe width="560" height="315" src="{{ exercise.movieLink }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+{% endblock %}

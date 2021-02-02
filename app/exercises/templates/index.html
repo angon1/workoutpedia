@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block content %}
+        {% for exercise in exerciseList %}
+        <div>
+            <p>
+                Exercise name: <a href="{{ url_for('exercises.exerciseShowName', name=exercise.name) }}" >{{ exercise.name }}</a><br>
+                <span> <a href="{{ url_for('exercises.exerciseEdit', id=exercise.id) }}">Edit</a></span>&#9
+                <span> <a href="{{ url_for('exercises.exerciseDelete', id=exercise.id) }}" >Delete</a></span>
+                <span> <a href="{{ url_for('exercises.exerciseShowNameSerialized', name=exercise.name) }}" >Serialize</a></span>
+                <span> <a href="{{ url_for('exercises.exerciseIdSerialize', id=exercise.id) }}" >Serialize by id</a></span>
+            </p>
+        </div>
+        {% endfor %}
+        <br>
+        <a href="{{ url_for('exercises.exerciseNew') }}" >Add exercise</a><br>
+        <a href="{{ url_for('exercises.exerciseListSerialized') }}" >Serialize list</a><br>
+{% endblock %}

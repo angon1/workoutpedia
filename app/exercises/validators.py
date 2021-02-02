@@ -1,7 +1,7 @@
 from flask import request
 
 
-class ExcerciseValidator:
+class ExerciseValidator:
     @staticmethod
     def validate(data):
         if "name" and "description" and "movieLink" in data:
@@ -11,9 +11,9 @@ class ExcerciseValidator:
 
     @staticmethod
     def validate_request_and_return_dictionary(request):
-        excercise_params = request.get_json()
-        if "name" and "description" and "movieLink" in excercise_params:
-            return excercise_params
+        exercise_params = request.get_json()
+        if "name" and "description" and "movieLink" in exercise_params:
+            return exercise_params
         else:
             return False
 

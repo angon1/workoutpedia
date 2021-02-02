@@ -22,9 +22,9 @@ def create_app(config_class=Config):
     login.init_app(app)
 
     # blueprints
-    from app.excercises import bp as excercises_bp
+    from app.exercises import bp as exercises_bp
 
-    app.register_blueprint(excercises_bp, url_prefix="/excercises")
+    app.register_blueprint(exercises_bp, url_prefix="/exercises")
 
     from app.users import bp as users_bp
 

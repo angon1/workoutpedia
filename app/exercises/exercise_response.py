@@ -4,7 +4,7 @@ from flask import (
 )
 
 
-class ExcerciseResponse:
+class ExerciseResponse:
     def __init__(self, code=200, msg=""):
         self.message_dict = {"message": msg}
         self.status_code = code
@@ -22,11 +22,11 @@ class ExcerciseResponse:
 
     @classmethod
     def error_not_found(cls):
-        return cls(400, "Excercise not found").prepare()
+        return cls(400, "Exercise not found").prepare()
 
     @classmethod
     def error_can_not_be_created_already_exist(cls):
-        return cls(400, "Excercise can't be created, already in base").prepare()
+        return cls(400, "Exercise can't be created, already in base").prepare()
 
     @classmethod
     def ok_created(cls):
@@ -34,11 +34,11 @@ class ExcerciseResponse:
 
     @classmethod
     def ok_updated(cls):
-        return cls(200, "Succesfuly updated excercise in base").prepare()
+        return cls(200, "Succesfuly updated exercise in base").prepare()
 
     @classmethod
     def ok_deleted(cls):
-        return cls(200, "Excercise deleted").prepare()
+        return cls(200, "Exercise deleted").prepare()
 
     @classmethod
     def ok_exercise_found(cls, exercise):

@@ -1,18 +1,18 @@
 # from flask import current_app, request
 # from flask import url_for, json, jsonify
-# from app.tags.models import Excercise, Tag
-# from app.tags.tag_request_handler import ExcerciseRequestHandler
+# from app.tags.models import Exercise, Tag
+# from app.tags.tag_request_handler import ExerciseRequestHandler
 
 
-# class TestExcerciseRequestDispatcher:
+# class TestExerciseRequestDispatcher:
 #     def test_processing_create_tag_request_and_success(self, client, test_tag):
 #         with current_app.test_request_context(method="POST", json=test_tag):
 #             print("\n\nrequest = {}".format(request))
-#             # ExcerciseRequestHandler.process_create_request()
+#             # ExerciseRequestHandler.process_create_request()
 #             ExerciseRequestDispatcher.process_create(request)
 #         assert client.get("tags/unittest1/serialized").status_code == 200
 
-#     # Dispatcher.ExcerciseHandler.costam.funkja()
+#     # Dispatcher.ExerciseHandler.costam.funkja()
 #     # DispatcherInterface()
 #     # DisptarchersUtilty() - elemnty wspolne
 

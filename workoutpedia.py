@@ -1,6 +1,6 @@
 from app import create_app, db
 from app.users.models import *
-from app.excercises.models import *
+from app.exercises.models import *
 
 # from config import Config
 # class ShellConfig(Config):
@@ -14,4 +14,4 @@ app = create_app()
 
 @app.shell_context_processor
 def make_shell_context():
-    return {"db": db, "User": User, "Excercise": Excercise, "Tag": Tag}
+    return {"db": db, "User": User, "Exercise": Exercise, "Tag": Tag}

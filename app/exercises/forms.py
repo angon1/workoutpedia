@@ -2,18 +2,18 @@ from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import ValidationError, DataRequired
-from app.excercises.models import *
+from app.exercises.models import *
 
 
-class ExcerciseForm(FlaskForm):
-    name = StringField("Excercise name", validators=[DataRequired()])
-    description = StringField("Excercise Description", validators=[DataRequired()])
+class ExerciseForm(FlaskForm):
+    name = StringField("Exercise name", validators=[DataRequired()])
+    description = StringField("Exercise Description", validators=[DataRequired()])
     movieLink = StringField("Link to YouTube")
     submit = SubmitField("Save")
 
 
 class TagForm(FlaskForm):
-    name = StringField("Excercise name", validators=[DataRequired()])
-    category = StringField("Excercise Description", validators=[DataRequired()])
+    name = StringField("Exercise name", validators=[DataRequired()])
+    category = StringField("Exercise Description", validators=[DataRequired()])
     movieLink = StringField("Link to YouTube")
     submit = SubmitField("Save")

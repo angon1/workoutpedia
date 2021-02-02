@@ -1,6 +1,6 @@
 import pytest, tempfile, os
 from app import create_app, db
-from app.excercises.models import Excercise, Tag
+from app.exercises.models import Exercise, Tag
 from flask_sqlalchemy import SQLAlchemy
 
 from config import Config
@@ -57,12 +57,12 @@ def client(app):
 
 
 @pytest.fixture(scope="module")
-def test_excercise():
+def test_exercise():
     return {"name": "unittest1", "description": "description1", "movieLink": "link1"}
 
 
 @pytest.fixture(scope="module")
-def test_excercise_incorrect():
+def test_exercise_incorrect():
     return {
         "name": "unittest1",
         "description": "description1",
@@ -87,16 +87,16 @@ def test_tags_incorrect():
 
 
 @pytest.fixture(scope="function")
-def new_excercise(app, test_excercise):
-    excercise = Excercise(
-        name=test_excercise["name"],
-        description=test_excercise["description"],
-        movieLink=test_excercise["movieLink"],
+def new_exercise(app, test_exercise):
+    exercise = Exercise(
+        name=test_exercise["name"],
+        description=test_exercise["description"],
+        movieLink=test_exercise["movieLink"],
     )
-    db.session.add(excercise)
+    db.session.add(exercise)
     db.session.commit()
-    yield excercise
-    excercise.tags = []
+    yield exercise
+    exercise.tags = []
 
 
 @pytest.fixture(scope="function")

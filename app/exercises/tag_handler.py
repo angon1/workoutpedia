@@ -8,13 +8,13 @@ from flask import (
     jsonify,
     make_response,
 )
-from app.excercises.models import *
+from app.exercises.models import *
 from werkzeug.urls import url_parse
-from app.excercises.forms import ExcerciseForm
-from app.excercises.validators import ExcerciseValidator
+from app.exercises.forms import ExerciseForm
+from app.exercises.validators import ExerciseValidator
 from json import dumps
 
-# Tags - Excercise categorization
+# Tags - Exercise categorization
 class TagHandler:
     def get_json_list(self):
         tags = Tag.query.all()
@@ -28,18 +28,18 @@ class TagHandler:
         tagJson = tag.asDict()
         return jsonify(tagJson)
 
-    def get_with_connected_excercises_json(self, id):
+    def get_with_connected_exercises_json(self, id):
         tag = Tag.query.get(id)
-        excercises = tag.getExcercises()
-        tagWithExcercises = []
-        tagWithExcercises.append(tag.asDict())
-        tagWithExcercises.append(excercises)
-        return jsonify(tagWithExcercises)
+        exercises = tag.getExercises()
+        tagWithExercises = []
+        tagWithExercises.append(tag.asDict())
+        tagWithExercises.append(exercises)
+        return jsonify(tagWithExercises)
 
     def get_connected_excercies_json(self, id):
         tag = Tag.query.get(id)
-        excercises = excercises = tag.getExcercises()
-        return jsonify(excercises)
+        exercises = exercises = tag.getExercises()
+        return jsonify(exercises)
 
     def get_json_by_category(self, category):
         tags = Tag.query.filter_by(category=category)
