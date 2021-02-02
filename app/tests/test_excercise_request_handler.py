@@ -2,6 +2,7 @@ from flask import current_app, request
 from flask import url_for, json, jsonify
 from app.exercises.models import Exercise, Tag
 from app.exercises.exercise_request_manager import ExerciseRequestManager
+from app.exercises.exercise_response import ExerciseResponse
 
 
 class TestExerciseRequestManager:
@@ -11,8 +12,11 @@ class TestExerciseRequestManager:
         with current_app.test_request_context(method="POST", json=test_exercise):
             print("\n\nrequest = {}".format(request))
             # ExerciseRequestHandler.process_create_request()
-            ExerciseRequestManager.exercise_create()
-        assert client.get("exercises/unittest1/serialized").status_code == 200
+            response = ExerciseRequestManager.exercise_create()
+            print("\n\n tralala: response: {}\n".format(response))
+        print(response.status_code)
+
+        assert response.status_code == ExerciseResponse.ok_created().status_code
 
     def test_processing_create_exercise_request_and_fail(
         self, client, test_exercise, new_exercise
@@ -20,8 +24,11 @@ class TestExerciseRequestManager:
         with current_app.test_request_context(method="POST", json=test_exercise):
             print("\n\nrequest = {}".format(request))
             # ExerciseRequestHandler.process_create_request()
-            ExerciseRequestManager.exercise_create()
-        assert client.get("exercises/unittest1/serialized").status_code == 200
+            response = ExerciseRequestManager.exercise_create()
+        assert (
+            response.status_code
+            == ExerciseResponse.error_can_not_be_created_already_exist().status_code
+        )
 
     # Dispatcher.ExerciseHandler.costam.funkja()
     # DispatcherInterface()
