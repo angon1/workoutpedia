@@ -1,10 +1,10 @@
 from flask import request, current_app
 from . import bp
-from .excercise_request_handler import ExcerciseRequestHandler
+from .excercise_request_manager import ExcerciseRequestManager
 from .excercise_response import ExcerciseResponse
 
 # to remove
-from .excerciseDataHandler import *
+# from .excerciseDataManager import *
 
 
 # @bp.route("/new", methods=["GET", "POST"])
@@ -40,22 +40,22 @@ def excerciseIdSerialize(id):
 
 @bp.route("/create", methods=["POST"])
 def excerciseCreateSerialized():
-    return ExcerciseRequestHandler.create()
+    return ExcerciseRequestManager.exercise_create()
 
 
 @bp.route("/<int:id>/update", methods=["POST"])
 def excerciseCreateUpdate(id):
-    return ExcerciseRequestHandler.update(id)
+    return ExcerciseRequestManager.exercise_update(id)
 
 
 @bp.route("/<int:id>/delete", methods=["GET", "POST"])
 def excerciseDelete(id):
-    return ExcerciseRequestHandler.delete(id)
+    return ExcerciseRequestManager.exercise_delete(id)
 
 
 @bp.route("/<name>/serialized", methods=["GET"])
 def excerciseShowNameSerialized(name):
-    return ExcerciseRequestHandler.find_exercise_by_name(name)
+    return ExcerciseRequestManager.exercise_find_by_name(name)
 
 
 # tags

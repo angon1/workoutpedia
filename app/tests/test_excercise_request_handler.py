@@ -1,17 +1,26 @@
 from flask import current_app, request
 from flask import url_for, json, jsonify
 from app.excercises.models import Excercise, Tag
-from app.excercises.excercise_request_handler import ExcerciseRequestHandler
+from app.excercises.excercise_request_manager import ExcerciseRequestManager
 
 
-class TestExcerciseRequestDispatcher:
+class TestExcerciseRequestManager:
     def test_processing_create_excercise_request_and_success(
         self, client, test_excercise
     ):
         with current_app.test_request_context(method="POST", json=test_excercise):
             print("\n\nrequest = {}".format(request))
             # ExcerciseRequestHandler.process_create_request()
-            ExerciseRequestDispatcher.process_create(request)
+            ExcerciseRequestManager.exercise_create()
+        assert client.get("excercises/unittest1/serialized").status_code == 200
+
+    def test_processing_create_excercise_request_and_fail(
+        self, client, test_excercise, new_excercise
+    ):
+        with current_app.test_request_context(method="POST", json=test_excercise):
+            print("\n\nrequest = {}".format(request))
+            # ExcerciseRequestHandler.process_create_request()
+            ExcerciseRequestManager.exercise_create()
         assert client.get("excercises/unittest1/serialized").status_code == 200
 
     # Dispatcher.ExcerciseHandler.costam.funkja()

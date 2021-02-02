@@ -7,7 +7,7 @@ class TestSerializers:
     def test_serialized_excercise_get(self, client, new_excercise):
         assert client.get("excercises/unittest1/serialized").status_code == 200
 
-    def test_excercise_dict(self, client, new_excercise):
+    def test_excercise_get_request_and_success(self, client, new_excercise):
         """
         GIVEN a Excercise model and excercise dictionary
         WHEN GET is send to excercise url
@@ -18,7 +18,7 @@ class TestSerializers:
         print(data)
         assert data == excerciseDict
 
-    def test_excercise_add_post(self, client, test_excercise):
+    def test_excercise_create_post_request_and_success(self, client, test_excercise):
         """
         GIVEN a test excercise data
         WHEN post  JSONified excercise data to excercise_add url
@@ -36,7 +36,9 @@ class TestSerializers:
         assert response.status_code == 200
         assert data["message"] == "Succesfuly added to base"
 
-    def test_excercise_update_post(self, client, new_excercise, test_excercise):
+    def test_excercise_update_post_request_and_success(
+        self, client, new_excercise, test_excercise
+    ):
         """
         GIVEN a test excercise data
         WHEN post  JSONified excercise data to excercise_add url
@@ -55,7 +57,9 @@ class TestSerializers:
         assert response.status_code == 200
         assert data["message"] == "Succesfuly updated excercise in base"
 
-    def test_excercise_delete_post(self, client, new_excercise, test_excercise):
+    def test_excercise_delete_post_and_success(
+        self, client, new_excercise, test_excercise
+    ):
         """
         GIVEN a test excercise data
         WHEN post  JSONified excercise data to excercise_add url
@@ -74,7 +78,7 @@ class TestSerializers:
         assert response.status_code == 200
         assert data["message"] == "Excercise deleted"
 
-    def test_excercise_delete_not_in_base_post(self, client, test_excercise):
+    def test_excercise_delete__and_fail_not_in_base_post(self, client, test_excercise):
         """
         GIVEN a test excercise data
         WHEN post  JSONified excercise data to excercise_add url
