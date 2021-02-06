@@ -1,6 +1,9 @@
 from flask import request, current_app
 from . import bp
-from .exercise_request_manager import ExerciseRequestManager
+from .exercise_request_handlers import (
+    ExerciseCommandRequestHandler,
+    ExerciseQueryRequestHandler,
+)
 from .exercise_response import ExerciseResponse
 
 # to remove
@@ -40,22 +43,22 @@ def exerciseIdSerialize(id):
 
 @bp.route("/create", methods=["POST"])
 def exerciseCreateSerialized():
-    return ExerciseRequestManager.exercise_create()
+    return ExerciseCommandRequestHandler.exercise_create()
 
 
 @bp.route("/<int:id>/update", methods=["POST"])
 def exerciseCreateUpdate(id):
-    return ExerciseRequestManager.exercise_update(id)
+    return ExerciseCommandRequestHandler.exercise_update(id)
 
 
 @bp.route("/<int:id>/delete", methods=["GET", "POST"])
 def exerciseDelete(id):
-    return ExerciseRequestManager.exercise_delete(id)
+    return ExerciseCommandRequestHandler.exercise_delete(id)
 
 
 @bp.route("/<name>/serialized", methods=["GET"])
 def exerciseShowNameSerialized(name):
-    return ExerciseRequestManager.exercise_find_by_name(name)
+    return ExerciseQueryRequestHandler.find_by_name(name)
 
 
 # tags

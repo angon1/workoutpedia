@@ -13,6 +13,53 @@ exerciseToTag = db.Table(
 )
 
 
+class ExerciseCommand:
+    @staticmethod
+    def create_or_none_if_already_in_db(params):
+        exercise = Exercise.query.filter_by(name=params["name"]).first()
+        if exercise is not None:
+            return False
+        else:
+            exercise = Exercise(
+                params["name"], params["description"], params["movieLink"]
+            )
+            db.session.add(exercise)
+            db.session.commit()
+            return True
+
+    @staticmethod
+    def update(id, params):
+        exercise = Exercise.query.filter_by(id=id).first()
+        if exercise is None:
+            return False
+        else:
+            exercise.name = params["name"]
+            exercise.description = params["description"]
+            exercise.movieLink = params["movieLink"]
+            db.session.commit()
+            return True
+
+    @staticmethod
+    def remove_from_db(id):
+        exercise = Exercise.query.filter_by(id=id).first()
+        if exercise is None:
+            return False
+        else:
+            db.session.delete(exercise)
+            db.session.commit()
+            return True
+
+
+class ExerciseQuery:
+    @staticmethod
+    def get_from_db_or_none(id):
+        return Exercise.query.filter_by(id=id).first()
+
+    @staticmethod
+    def get_name_from_db_or_none(name):
+        return Exercise.query.filter_by(name=name).one()
+
+
 class Exercise(db.Model, SerializerMixin):
     # class fields
     id = db.Column(db.Integer, primary_key=True)
@@ -67,55 +114,6 @@ class Exercise(db.Model, SerializerMixin):
     def asDictNoTags(self):
         exerciseDict = self.to_dict(rules=("-tags",))
         return exerciseDict
-
-    @classmethod
-    def init_from_json_request_or_none(cls, params):
-        if ExerciseValidator.validate(params):
-            return cls(params["name"], params["description"], params["movieLink"])
-        else:
-            return None
-
-    @classmethod
-    def get_from_db_or_none(cls, id):
-        return cls.query.filter_by(id=id).first()
-
-    @classmethod
-    def create_or_none_if_already_in_db(cls, params):
-        exercise = cls.query.filter_by(name=params["name"]).first()
-        if exercise is not None:
-            return False
-        else:
-            exercise = cls(params["name"], params["description"], params["movieLink"])
-            db.session.add(exercise)
-            db.session.commit()
-            return True
-
-    @classmethod
-    def update(cls, id, params):
-        exercise = cls.query.filter_by(id=id).first()
-        if exercise is None:
-            return False
-        else:
-            exercise.name = params["name"]
-            exercise.description = params["description"]
-            exercise.movieLink = params["movieLink"]
-            db.session.commit()
-            return True
-
-    @classmethod
-    def remove_from_db(cls, id):
-        exercise = cls.query.filter_by(id=id).first()
-        if exercise is None:
-            return False
-        else:
-            db.session.delete(exercise)
-            db.session.commit()
-            return True
-
-    def find_by_name(name):
-        exercise = Exercise.query.filter_by(name=name).one()
-        exerciseJson = exercise.asDict()
-        return jsonify(exerciseJson)
 
 
 class Tag(db.Model, SerializerMixin):

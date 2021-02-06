@@ -1,4 +1,4 @@
-from app.exercises.models import Exercise
+from app.exercises.models import Exercise, ExerciseCommand, ExerciseQuery
 from app.exercises.exercise_response import ExerciseResponse
 from app.exercises.validators import ExerciseValidator
 from flask import (
@@ -6,14 +6,14 @@ from flask import (
 )
 from flask import jsonify
 
-
-class ExerciseRequestManager:
+# zmiana stanu bazy - create, delete, update,
+class ExerciseCommandRequestHandler:
     @staticmethod
     def exercise_create():
         exercise_params = ExerciseValidator.validate_request_and_return_dictionary(
             request
         )
-        if Exercise.create_or_none_if_already_in_db(exercise_params) is False:
+        if ExerciseCommand.create_or_none_if_already_in_db(exercise_params) is False:
             return ExerciseResponse.error_can_not_be_created_already_exist()
         else:
             return ExerciseResponse.ok_created()
@@ -25,26 +25,32 @@ class ExerciseRequestManager:
         )
         if exercise_params is False:
             return ExerciseResponse.error_not_json()
-        if not Exercise.update(id, exercise_params):
+        if not ExerciseCommand.update(id, exercise_params):
             return ExerciseResponse.error_not_found()
         else:
             return ExerciseResponse.ok_updated()
 
     @staticmethod
     def exercise_delete(id):
-        if Exercise.remove_from_db(id) is False:
+        if ExerciseCommand.remove_from_db(id) is False:
             return ExerciseResponse.error_not_found()
         else:
             return ExerciseResponse.ok_deleted()
 
+
+# odpytanie - query - get, findy, etc - new/edit - jeśli występuje
+class ExerciseQueryRequestHandler:
     @staticmethod
-    def exercise_find_by_name(name):
-        exercise = Exercise.query.filter_by(name=name).one()
+    def find_by_name(name):
+        exercise = ExerciseQuery.get_name_from_db_or_none(name)
         exerciseJson = exercise.asDict()
         return ExerciseResponse.ok_exercise_found(exerciseJson)
 
     @staticmethod
-    def exercise_get_by_id(name):
-        exercise = Exercise.query.filter_by(name=name).one()
-        exerciseJson = exercise.asDict()
-        return ExerciseResponse.ok_exercise_found(exerciseJson)
+    def find_by_id(id):
+        exercise = ExerciseQuery.get_from_db_or_none(id)
+        if exercise is None:
+            return ExerciseResponse.error_not_found()
+        else:
+            # exerciseJson = exercise.asDict()
+            return ExerciseResponse.ok_exercise_found(exercise.asDict())
