@@ -45,3 +45,9 @@ class ExerciseResponse:
         response = cls()
         response.update(200, exercise)
         return response.prepare()
+
+    @classmethod
+    def ok_tags_list_found(cls, tags_list):
+        response = cls()
+        response.update(200, tags_list)
+        return response.prepare()

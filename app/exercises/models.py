@@ -57,7 +57,14 @@ class ExerciseQuery:
 
     @staticmethod
     def get_name_from_db_or_none(name):
-        return Exercise.query.filter_by(name=name).one()
+        return Exercise.query.filter_by(name=name).first()
+
+    @staticmethod
+    def get_tags_list_from_db_or_none(id):
+        exercise = Exercise.query.filter_by(id=id).first()
+        # return exercise.to_dict(only=("tags"), rules=("-tags.exercise",))
+        # return exercise.tagsDict()
+        return exercise.only_tags_dict()
 
 
 class Exercise(db.Model, SerializerMixin):
@@ -114,6 +121,9 @@ class Exercise(db.Model, SerializerMixin):
     def asDictNoTags(self):
         exerciseDict = self.to_dict(rules=("-tags",))
         return exerciseDict
+
+    def only_tags_dict(self):
+        return self.to_dict(only=("tags",), rules=("-tags.exercise",))
 
 
 class Tag(db.Model, SerializerMixin):

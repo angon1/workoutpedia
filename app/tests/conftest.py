@@ -112,6 +112,20 @@ def new_tags(app, test_tags):
     yield tags
 
 
+@pytest.fixture(scope="function")
+def new_exercise_with_tags(app, test_exercise, new_tags):
+    exercise = Exercise(
+        name=test_exercise["name"],
+        description=test_exercise["description"],
+        movieLink=test_exercise["movieLink"],
+    )
+    exercise.addTagsList([new_tags[0], new_tags[1]])
+    db.session.add(exercise)
+    db.session.commit()
+    yield exercise
+    exercise.tags = []
+
+
 # @pytest.fixture
 # def client():
 #     db_fd, app.config['DATABASE'] = tempfile.mkstemp()

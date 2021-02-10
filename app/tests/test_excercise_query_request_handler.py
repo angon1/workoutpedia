@@ -12,22 +12,26 @@ class TestExerciseQueryRequestHandler:
         assert response.status_code == ExerciseResponse.ok_created().status_code
         assert client.get("exercises/unittest1/serialized").status_code == 200
 
-    def test_processing_create_exercise_request_and_fail(self, client):
+    def test_get_exercise_from_db_by_id_and_fail(self, client):
         response = ExerciseQueryRequestHandler.find_by_id(987)
         assert response.status_code == ExerciseResponse.error_not_found().status_code
 
-    # Dispatcher.ExerciseHandler.costam.funkja()
-    # DispatcherInterface()
-    # DisptarchersUtilty() - elemnty wspolne
+    def test_get_exercise_from_db_by_name_and_success(self, client, new_exercise):
+        response = ExerciseQueryRequestHandler.find_by_name(new_exercise.name)
+        assert response.status_code == ExerciseResponse.ok_created().status_code
+        assert client.get("exercises/unittest1/serialized").status_code == 200
 
-    # def - create, update, get, get_id, get_name, get_list - permisions for users
+    def test_get_exercise_from_db_by_name_and_fail(self, client):
+        response = ExerciseQueryRequestHandler.find_by_name("unittest1")
+        assert response.status_code == ExerciseResponse.error_not_found().status_code
 
-    # def test_add_tag_to_exercise_success()
+    def test_get_exercise_tag_list_and_success(self, client, new_exercise_with_tags):
+        response = ExerciseQueryRequestHandler.get_tags_list(new_exercise_with_tags.id)
+        # print("tralalalala \n response_message {}".format(response.messsage))
+        assert (
+            response.status_code == ExerciseResponse.ok_tags_list_found("").status_code
+        )
 
-    # def test_add_tag_to_exercise_fail_tag_alredy_added()
-
-    # def test_get_tags_for_exercise()
-
-    # def test_remove_tag_from_exercise_success()
-
-    # def test_remove_tag_from_exercise_fail_no_tag()
+    def test_get_exercise_tag_list_and_fail(self, client, new_exercise):
+        response = ExerciseQueryRequestHandler.get_tags_list(new_exercise.id)
+        assert response.status_code == ExerciseResponse.error_not_found().status_code

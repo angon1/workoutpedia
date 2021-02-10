@@ -43,8 +43,10 @@ class ExerciseQueryRequestHandler:
     @staticmethod
     def find_by_name(name):
         exercise = ExerciseQuery.get_name_from_db_or_none(name)
-        exerciseJson = exercise.asDict()
-        return ExerciseResponse.ok_exercise_found(exerciseJson)
+        if exercise is None:
+            return ExerciseResponse.error_not_found()
+        else:
+            return ExerciseResponse.ok_exercise_found(exercise.asDict())
 
     @staticmethod
     def find_by_id(id):
@@ -52,5 +54,13 @@ class ExerciseQueryRequestHandler:
         if exercise is None:
             return ExerciseResponse.error_not_found()
         else:
-            # exerciseJson = exercise.asDict()
             return ExerciseResponse.ok_exercise_found(exercise.asDict())
+
+    @staticmethod
+    def get_tags_list(id):
+        tags_list = ExerciseQuery.get_tags_list_from_db_or_none(id)
+        print("\nblablabla\n tags_list: {}\n".format(tags_list))
+        if tags_list is None:
+            return ExerciseResponse.error_not_found()
+        else:
+            return ExerciseResponse.ok_tags_list_found(tags_list)
