@@ -59,7 +59,6 @@ class ExerciseQueryRequestHandler:
     @staticmethod
     def get_tags_list(id):
         tags_list = ExerciseQuery.get_tags_list_from_db_or_none(id)
-        print("\nblablabla\n tags_list: {}\n".format(tags_list))
         if tags_list is None:
             return ExerciseResponse.error_not_found()
         else:

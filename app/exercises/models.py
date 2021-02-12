@@ -60,11 +60,13 @@ class ExerciseQuery:
         return Exercise.query.filter_by(name=name).first()
 
     @staticmethod
-    def get_tags_list_from_db_or_none(id):
-        exercise = Exercise.query.filter_by(id=id).first()
-        # return exercise.to_dict(only=("tags"), rules=("-tags.exercise",))
-        # return exercise.tagsDict()
+    def __tags_dict(exercise):
         return exercise.only_tags_dict()
+
+    @classmethod
+    def get_tags_list_from_db_or_none(cls, id):
+        exercise = Exercise.query.filter_by(id=id).first()
+        return cls().__tags_dict(exercise)
 
 
 class Exercise(db.Model, SerializerMixin):

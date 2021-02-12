@@ -14,6 +14,12 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "test.db")
 
 
+class ExerciseDatabaseChecker:
+    @staticmethod
+    def check_if_name_exist(name, client):
+        return client.get("exercises/{}/serialized".format(name)).status_code == 200
+
+
 @pytest.fixture(scope="function")
 def app():
 

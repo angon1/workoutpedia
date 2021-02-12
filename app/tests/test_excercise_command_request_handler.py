@@ -3,6 +3,7 @@ from flask import url_for, json, jsonify
 from app.exercises.models import Exercise, Tag
 from app.exercises.exercise_request_handlers import ExerciseCommandRequestHandler
 from app.exercises.exercise_response import ExerciseResponse
+from .conftest import ExerciseDatabaseChecker
 
 
 class TestExerciseCommandRequestHandler:
@@ -12,7 +13,9 @@ class TestExerciseCommandRequestHandler:
         with current_app.test_request_context(method="POST", json=test_exercise):
             response = ExerciseCommandRequestHandler.exercise_create()
         assert response.status_code == ExerciseResponse.ok_created().status_code
-        assert client.get("exercises/unittest1/serialized").status_code == 200
+        assert ExerciseDatabaseChecker.check_if_name_exist(
+            test_exercise["name"], client
+        )
 
     def test_processing_create_exercise_request_and_fail(
         self, client, test_exercise, new_exercise
@@ -48,17 +51,11 @@ class TestExerciseCommandRequestHandler:
         assert response.status_code == ExerciseResponse.ok_updated().status_code
         assert client.get("exercises/unittest1/serialized").status_code == 200
 
-    # Dispatcher.ExerciseHandler.costam.funkja()
-    # DispatcherInterface()
-    # DisptarchersUtilty() - elemnty wspolne
-
-    # def - create, update, get, get_id, get_name, get_list - permisions for users
+    # def - create, update, delete - permisions for users
 
     # def test_add_tag_to_exercise_success()
 
     # def test_add_tag_to_exercise_fail_tag_alredy_added()
-
-    # def test_get_tags_for_exercise()
 
     # def test_remove_tag_from_exercise_success()
 

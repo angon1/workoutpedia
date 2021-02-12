@@ -27,7 +27,6 @@ class TestExerciseQueryRequestHandler:
 
     def test_get_exercise_tag_list_and_success(self, client, new_exercise_with_tags):
         response = ExerciseQueryRequestHandler.get_tags_list(new_exercise_with_tags.id)
-        # print("tralalalala \n response_message {}".format(response.messsage))
         assert (
             response.status_code == ExerciseResponse.ok_tags_list_found("").status_code
         )
