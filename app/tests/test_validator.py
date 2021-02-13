@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, request
 from flask import url_for, json, jsonify
 from app.exercises.models import Exercise, Tag
 from app.exercises.validators import ExerciseValidator, TagValidator
@@ -31,16 +31,21 @@ class TestValidators:
         WHEN validator for Tag is called
         THEN check if True is returned
         """
-        data = json.dumps(test_tags_incorrect)
+        with current_app.test_request_context(method="GET", json=test_tags_incorrect):
+            print("during with block")
+        data = TagValidator.validate(request)
         print(data)
-        assert False == TagValidator.validate(data)
+        assert False == data
 
-    def test_validate_tag_correct_json(self, client, test_tags):
+    def test_validate_tag_correct_json(self, client, test_tag):
         """
         GIVEN incorrect json of Tag
         WHEN validator for Tag is called
         THEN check if True is returned
         """
-        data = json.dumps(test_tags)
+        with current_app.test_request_context(method="GET", json=test_tag):
+            print("during with block")
+            data = TagValidator.validate(request)
+
         print(data)
-        assert True == TagValidator.validate(data)
+        assert data == test_tag

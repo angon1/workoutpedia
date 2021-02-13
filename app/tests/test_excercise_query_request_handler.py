@@ -1,7 +1,6 @@
 from flask import current_app, request
 from flask import url_for, json, jsonify
 
-# from app.exercises.models import Exercise, Tag
 from app.exercises.exercise_request_handlers import ExerciseQueryRequestHandler
 from app.exercises.exercise_response import ExerciseResponse
 
@@ -31,6 +30,6 @@ class TestExerciseQueryRequestHandler:
             response.status_code == ExerciseResponse.ok_tags_list_found("").status_code
         )
 
-    def test_get_exercise_tag_list_and_fail(self, client, new_exercise):
-        response = ExerciseQueryRequestHandler.get_tags_list(new_exercise.id)
+    def test_get_exercise_tag_list_and_fail(self, client, test_exercise):
+        response = ExerciseQueryRequestHandler.get_tags_list(987)
         assert response.status_code == ExerciseResponse.error_not_found().status_code

@@ -84,6 +84,11 @@ def test_tags():
 
 
 @pytest.fixture(scope="module")
+def test_tag():
+    return {"name": "tag1", "category": "category1"}
+
+
+@pytest.fixture(scope="module")
 def test_tags_incorrect():
     return [
         {

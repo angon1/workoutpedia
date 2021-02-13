@@ -64,9 +64,12 @@ class ExerciseQuery:
         return exercise.only_tags_dict()
 
     @classmethod
-    def get_tags_list_from_db_or_none(cls, id):
+    def get_tags_dict_from_db_or_none(cls, id):
         exercise = Exercise.query.filter_by(id=id).first()
-        return cls().__tags_dict(exercise)
+        if exercise is None:
+            return None
+        else:
+            return cls().__tags_dict(exercise)
 
 
 class Exercise(db.Model, SerializerMixin):

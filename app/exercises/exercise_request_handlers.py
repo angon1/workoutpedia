@@ -31,6 +31,18 @@ class ExerciseCommandRequestHandler:
             return ExerciseResponse.ok_updated()
 
     @staticmethod
+    def exercise_add_tag(id):
+        exercise_params = ExerciseValidator.validate_request_and_return_dictionary(
+            request
+        )
+        if exercise_params is False:
+            return ExerciseResponse.error_not_json()
+        if not ExerciseCommand.update(id, exercise_params):
+            return ExerciseResponse.error_not_found()
+        else:
+            return ExerciseResponse.ok_updated()
+
+    @staticmethod
     def exercise_delete(id):
         if ExerciseCommand.remove_from_db(id) is False:
             return ExerciseResponse.error_not_found()
@@ -58,7 +70,7 @@ class ExerciseQueryRequestHandler:
 
     @staticmethod
     def get_tags_list(id):
-        tags_list = ExerciseQuery.get_tags_list_from_db_or_none(id)
+        tags_list = ExerciseQuery.get_tags_dict_from_db_or_none(id)
         if tags_list is None:
             return ExerciseResponse.error_not_found()
         else:
