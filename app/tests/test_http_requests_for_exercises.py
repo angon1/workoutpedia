@@ -107,3 +107,20 @@ class TestSerializers:
     #     data = json.loads(client.get("tags/serialized").get_data())
     #     print(data)
     #     assert data == tagsDict
+    def test_tag_create_post_request_and_success(self, client, test_tag):
+        """
+        GIVEN a test exercise data
+        WHEN post  JSONified exercise data to exercise_add url
+        THEN check if exercise is added to db
+        """
+        tag_json = json.dumps(test_tag)
+        print(tag_json)
+        response = client.post(
+            "exercises/tag/create",
+            data=tag_json,
+            content_type="application/json",
+        )
+        data = json.loads(response.get_data(as_text=True))
+        print(data)
+        assert response.status_code == 200
+        assert data["message"] == "Succesfuly added to base"

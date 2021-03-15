@@ -33,9 +33,9 @@ class TestValidators:
         """
         with current_app.test_request_context(method="GET", json=test_tags_incorrect):
             print("during with block")
-        data = TagValidator.validate(request)
+        data = request.get_json()
         print(data)
-        assert False == data
+        assert False == TagValidator.validate(data)
 
     def test_validate_tag_correct_json(self, client, test_tag):
         """
@@ -45,7 +45,6 @@ class TestValidators:
         """
         with current_app.test_request_context(method="GET", json=test_tag):
             print("during with block")
-            data = TagValidator.validate(request)
-
+            data = request.get_json()
         print(data)
-        assert data == test_tag
+        assert TagValidator.validate(data)

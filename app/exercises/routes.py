@@ -5,6 +5,7 @@ from .exercise_request_handlers import (
     ExerciseQueryRequestHandler,
 )
 from .exercise_response import ExerciseResponse
+from .tag_handler import TagCommandHandler
 
 # to remove
 # from .exerciseDataManager import *
@@ -62,6 +63,16 @@ def exerciseShowNameSerialized(name):
 
 
 # tags
+@bp.route("/tag/create", methods=["POST"])
+def tag_create():
+    return TagCommandHandler.tag_create()
+
+
+@bp.route("/tag/<int:id>/update", methods=["POST"])
+def tag_update(id):
+    return TagCommandHandler.tag_update(id)
+
+
 # @bp.route("/tags/list", methods=["GET"])
 # def tagsListSerialized():
 #     return tagsListSerializedImpl()

@@ -8,11 +8,13 @@ from flask import (
     jsonify,
     make_response,
 )
-from app.exercises.models import *
 from werkzeug.urls import url_parse
-from app.exercises.forms import ExerciseForm
-from app.exercises.validators import ExerciseValidator
+
+# from app.exercises.forms import ExerciseForm
+from app.exercises.validators import TagValidator
 from json import dumps
+from .exercise_response import ExerciseResponse
+from .models import TagCommand, Tag
 
 # Tags - Exercise categorization
 class TagHandler:
@@ -47,3 +49,34 @@ class TagHandler:
         for tag in tags:
             serializedTags.append(tag.asDict())
         return jsonify(serializedTags)
+
+
+class TagCommandHandler:
+    @staticmethod
+    def tag_create():
+        tag_params = request.get_json()
+        validation_result = TagValidator.validate(tag_params)
+        if validation_result is False:
+            return ExerciseResponse.error_not_json()
+        if TagCommand.create_if_not_in_db(tag_params) is False:
+            return ExerciseResponse.error_can_not_be_created_already_exist()
+        else:
+            return ExerciseResponse.ok_created()
+
+    @staticmethod
+    def tag_update(id):
+        tag_params = request.get_json()
+        validation_result = TagValidator.validate(tag_params)
+        if validation_result is False:
+            return ExerciseResponse.error_not_json()
+        if not TagCommand.update(id, tag_params):
+            return ExerciseResponse.error_not_found()
+        else:
+            return ExerciseResponse.ok_updated()
+
+    @staticmethod
+    def tag_delete(id):
+        if not TagCommand.delete(id):
+            return ExerciseResponse.error_not_found()
+        else:
+            return ExerciseResponse.ok_updated()

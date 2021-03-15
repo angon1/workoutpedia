@@ -131,6 +131,50 @@ class Exercise(db.Model, SerializerMixin):
         return self.to_dict(only=("tags",), rules=("-tags.exercise",))
 
 
+class TagCommand:
+    @staticmethod
+    def create_if_not_in_db(params):
+        tag = Tag.query.filter_by(name=params["name"]).first()
+        if tag is not None:
+            return False
+        else:
+            tag = Tag(params["name"], params["category"])
+            db.session.add(tag)
+            db.session.commit()
+            return True
+
+    @classmethod
+    def __validate_if_name_is_not_a_duplicate(cls, id, name):
+        if Tag.query.filter_by(name=name).first().id == id:
+            return True
+        return False
+
+    @staticmethod
+    def update(id, params):
+        tag = Tag.query.filter_by(id=id).first()
+        if tag is None:
+            return False
+        elif False == TagCommand.__validate_if_name_is_not_a_duplicate(
+            id, params["name"]
+        ):
+            return False
+        else:
+            tag.name = params["name"]
+            tag.category = params["category"]
+            db.session.commit()
+            return True
+
+    @staticmethod
+    def delete(id):
+        tag = Tag.query.filter_by(id=id).first()
+        if tag is None:
+            return False
+        else:
+            db.session.delete(tag)
+            db.session.commit()
+            return True
+
+
 class Tag(db.Model, SerializerMixin):
     # fields
     id = db.Column(db.Integer, primary_key=True)
@@ -141,6 +185,10 @@ class Tag(db.Model, SerializerMixin):
         "Exercise", secondary=exerciseToTag, lazy=True, back_populates="tags"
     )
     # methods
+    def __init__(self, name, category):
+        self.name = name
+        self.category = category
+
     def __repr__(self):
         return "{}".format(self.asDict())
 

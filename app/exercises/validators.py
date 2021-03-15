@@ -20,10 +20,13 @@ class ExerciseValidator:
 
 class TagValidator:
     @staticmethod
-    def validate(request):
-        tag = request.get_json()
-        print(tag)
-        if (tag is not None) and ("name" and "category" in tag):
-            return tag
+    def validate(tag_params):
+        if tag_params is None:
+            return False
+        if "name" and "category" in tag_params:
+            return True
         else:
             return False
+
+    # @staticmethod
+    # def validate_update_params():

@@ -17,7 +17,26 @@ class TestConfig(Config):
 class ExerciseDatabaseChecker:
     @staticmethod
     def check_if_name_exist(name, client):
-        return client.get("exercises/{}/serialized".format(name)).status_code == 200
+        if (Exercise.query.filter_by(name=name).first()) is not None:
+            return True
+        else:
+            return False
+
+
+class TagDatabaseChecker:
+    @staticmethod
+    def check_if_name_exist(name, client):
+        if (Tag.query.filter_by(name=name).first()) is not None:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def check_if_category_exist(category, client):
+        if (Tag.query.filter_by(category=category).first()) is not None:
+            return True
+        else:
+            return False
 
 
 @pytest.fixture(scope="function")
